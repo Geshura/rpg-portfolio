@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Technomancer Portfolio — Post‑Apo Tech</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Post‑Apo frontend developer — restores sites, slays zombie processes and deploys survival‑grade interfaces.">
+  </head>
+  <body data-lang="en">
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <!-- English -->
+    <div class="lang lang-en">
+      <header class="hero">
+        <div class="wrap">
+          <nav class="lang-switch" aria-label="language switch">
+            <a href="#" data-lang="en" class="active">EN</a>
+            <a href="#" data-lang="pl">PL</a>
+          </nav>
+          <button id="fx-toggle" aria-pressed="false" title="Reduce visual effects">Reduce FX</button>
+          <h1 class="headline">I bring dead sites back to life — even when the Web is a Wasteland.</h1>
+          <p class="sub">ROLE: <strong>FRONTEND DEVELOPER / SITE CREATOR</strong> — I patch ruins with tape, tests and clean code. Main tools: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
+          <nav class="top-nav">
+            <a href="#about">About</a>
+            <a href="#inventory">Inventory</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <a class="cta" href="#contact">Send SOS — Recruit Engineer</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <section data-section="about" class="card">
+          <h2>About — Survivor's Log</h2>
+          <p>I survived the Internet Explorer wars and still ship components that don't explode. I code faster than corrosion spreads and debug with a Geiger counter when necessary. I hook APIs to hand‑cranked generators, optimize bundles, and exterminate zombie processes with a single well‑placed console.log.</p>
+          <p class="goal">Goal: Find steady work inside the Safe Zone — let's build something that survives the next Reset.</p>
+        </section>
+
+        <section data-section="inventory" class="card">
+          <h2>Inventory — Gear & Skills</h2>
+          <ul class="gear">
+            <li><strong>JavaScript</strong> — Swiss army knife: sometimes cuts you, but gets the job done.</li>
+            <li><strong>React</strong> — Modular armor: components stack like plates; states are battle‑tested.</li>
+            <li><strong>CSS / SASS</strong> — Duct tape for interfaces: I restyle the ruins into something usable.</li>
+            <li><strong>WordPress</strong> — Fast shelter generator: quick to deploy, watch for mutated plugins.</li>
+            <li><strong>DevOps / CI</strong> — Backup generator: I automate builds and deliveries even on an unstable grid.</li>
+            <li><strong>Security</strong> — Geiger filter: I sniff leaks and patch backdoors before they spread.</li>
+          </ul>
+          <div class="stats">
+            <span>Speed: 8/10</span>
+            <span>Reliability: 9/10</span>
+            <span>Improvisation: 10/10</span>
+          </div>
+        </section>
+
+        <section data-section="projects" class="card">
+          <h2>Quest Log — Recovered Artifacts</h2>
+
+          <article class="project">
+            <h3>VaultUI</h3>
+            <p class="summary">Single‑page fortress UI with offline cache, auth and graceful degradation.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Legacy UI that crashed offline and leaked user sessions.</li>
+              <li><strong>Role:</strong> Frontend lead — rebuilt UI, added auth flow and cache strategy.</li>
+              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
+              <li><strong>Fix:</strong> Implemented SW caching (NetworkFirst/CacheFirst), centralized auth, and retry logic for flaky networks.</li>
+              <li><strong>Result:</strong> 85% fewer session errors, offline read mode, and faster perceived load.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>RadiantBlog</h3>
+            <p class="summary">Migration and hardening of a battered CMS into a manageable, secure WordPress shelter.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Outdated CMS with slow pages and unpatched plugins.</li>
+              <li><strong>Role:</strong> Fullstack solo — migration, cleanup, security hardening.</li>
+              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
+              <li><strong>Fix:</strong> Migrated content, locked down permissions, implemented cache & WAF rules.</li>
+              <li><strong>Result:</strong> 4x faster TTFB, automated backups, and reduced spam/attacks.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>SupplyChain Map</h3>
+            <p class="summary">Realtime resource routing visualizer with resilience for flaky connections.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Data feeds drop often; map UI would hang and lose state.</li>
+              <li><strong>Role:</strong> Frontend & integration — crafted resilient realtime client.</li>
+              <li><strong>Tech:</strong> WebSockets, D3, React, local caching.</li>
+              <li><strong>Fix:</strong> Added reconnection/backoff, local buffering and eventual consistency UI hints.</li>
+              <li><strong>Result:</strong> Stable visualization under 30% packet loss and clearer operator alerts.</li>
+            </ul>
+          </article>
+
+          <p class="note">Want these expanded into full case studies (tech, metrics, before/after screenshots)? I can write them up.</p>
+        </section>
+
+        <section data-section="contact" class="card contact">
+          <h2>Contact — Radio Terminal</h2>
+          <p>Got a failing site, a leaky API, or need a resilient front built from scrap? Broadcast your distress signal. I'll respond on channel 77.7 (or email, if your carrier pigeons are reliable).</p>
+
+          <form class="radio" method="post">
+            <label>Operator / Base Name
+              <input name="name" placeholder="Your name or company" required>
+            </label>
+            <label>Signal (brief)
+              <input name="message" placeholder="What's broken?" required>
+            </label>
+            <label>Priority
+              <select name="priority">
+                <option>Normal</option>
+                <option>Emergency</option>
+                <option>Nuclear</option>
+              </select>
+            </label>
+            <button class="cta" type="submit">Transmit SOS</button>
+          </form>
+
+          <p class="alt">Prefer direct comms? Email: <a href="mailto:your@email.example">your@email.example</a></p>
+          <p class="radio-note">"Transmitting on 77.7 — if you hear static, it's probably me."</p>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="wrap">© Technomancer — replace placeholders with real ROLE/STACK/GOAL. Built for the next Reset.</div>
+      </footer>
+    </div>
+
+    <!-- Polish -->
+    <div class="lang lang-pl">
+      <header class="hero">
+        <div class="wrap">
+          <nav class="lang-switch" aria-label="przełącznik języka">
+            <a href="#" data-lang="en">EN</a>
+            <a href="#" data-lang="pl" class="active">PL</a>
+          </nav>
+          <h1 class="headline">Przywrócę Twój serwis do życia — nawet jeśli Internet to Pustkowie.</h1>
+          <p class="sub">ROLA: <strong>FRONTEND DEVELOPER / TWÓRCA STRON</strong> — łataję ruiny taśmą, testami i czystą logiką. Główne narzędzia: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
+          <nav class="top-nav">
+            <a href="#about">O mnie</a>
+            <a href="#inventory">Ekwipunek</a>
+            <a href="#projects">Misje</a>
+            <a href="#contact">Kontakt</a>
+          </nav>
+          <a class="cta" href="#contact">Nadaj sygnał SOS — Zrekrutuj Inżyniera</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <section data-section="about" class="card">
+          <h2>O mnie — Dziennik Ocalałego</h2>
+          <p>Przetrwałem wojny z Internet Explorerem i nadal dostarczam komponenty, które nie wybuchają. Koduję szybciej niż postępuje korozja i debuguję licznikiem Geigera, gdy trzeba. Podłączam API do korb, optymalizuję bundle i eliminuję zombie‑procesy jedną linijką.</p>
+          <p class="goal">Cel: zdobyć stałe zlecenia w Bezpiecznej Strefie — zbudujmy coś, co przetrwa następny Reset.</p>
+        </section>
+
+        <section data-section="inventory" class="card">
+          <h2>Ekwipunek — Bronie i Umiejętności</h2>
+          <ul class="gear">
+            <li><strong>JavaScript</strong> — scyzoryk szwajcarski: czasem zdziera palce, ale zrobi wszystko.</li>
+            <li><strong>React</strong> — modułowa zbroja: składam komponenty jak płyty pancerza.</li>
+            <li><strong>CSS / SASS</strong> — taśma i lakier: zamaskuję rdzę layoutu.</li>
+            <li><strong>WordPress</strong> — szybki generator szałasu: stawia chatę błyskawicznie, ale uważaj na zmutowane wtyczki.</li>
+            <li><strong>DevOps / CI</strong> — agregat zapasowy: automatyzuję kompilacje i deploye nawet przy chwiejnej sieci.</li>
+            <li><strong>Bezpieczeństwo</strong> — filtr Geigera: wyłapuję wycieki i łataję backdoory zanim się rozsieją.</li>
+          </ul>
+          <div class="stats">
+            <span>Szybkość: 8/10</span>
+            <span>Solidność: 9/10</span>
+            <span>Improwizacja: 10/10</span>
+          </div>
+        </section>
+
+        <section data-section="projects" class="card">
+          <h2>Quest Log — Odzyskane Artefakty</h2>
+
+          <article class="project">
+            <h3>VaultUI</h3>
+            <p class="summary">Forteca UI typu SPA z cache offline, auth i łagodnym degradowaniem.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Stary interfejs, który padał offline i tracił sesje użytkowników.</li>
+              <li><strong>Rola:</strong> Frontend lead — przebudowa UI, flow autoryzacji i strategia cache.</li>
+              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
+              <li><strong>Naprawa:</strong> SW (NetworkFirst/CacheFirst), centralizacja auth i retry logic.</li>
+              <li><strong>Efekt:</strong> 85% mniej błędów sesji, tryb offline i szybsze odczucie ładowania.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>RadiantBlog</h3>
+            <p class="summary">Migracja i wzmocnienie CMS‑a do bezpiecznego WordPressa.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Przestarzały CMS, powolne strony i niezałatane wtyczki.</li>
+              <li><strong>Rola:</strong> Fullstack solo — migracja, cleanup, hardening.</li>
+              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
+              <li><strong>Naprawa:</strong> Migracja treści, blokada uprawnień, cache i reguły WAF.</li>
+              <li><strong>Efekt:</strong> 4x szybsze TTFB, automatyczne backupy i mniej spam/ataków.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>Mapa Zaopatrzenia</h3>
+            <p class="summary">Wizualizator tras zasobów w czasie rzeczywistym odporny na niestabilne łącza.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Feed danych często zrywał połączenie; UI się zawieszał.</li>
+              <li><strong>Rola:</strong> Frontend & integracja — odporny klient realtime.</li>
+              <li><strong>Tech:</strong> WebSockets, D3, React, lokalny cache.</li>
+              <li><strong>Naprawa:</strong> Reconnection/backoff, buforowanie lokalne i wskazania spójności.</li>
+              <li><strong>Efekt:</strong> Stabilna wizualizacja przy 30% utracie pakietów i lepsze alerty dla operatorów.</li>
+            </ul>
+          </article>
+
+          <p class="note">Chcesz pełne case study? Rozwinę techniczne raporty z metrykami i kodem.</p>
+        </section>
+
+        <section data-section="contact" class="card contact">
+          <h2>Kontakt — Terminal Radiowy</h2>
+          <p>Masz awarię, wyciek danych albo potrzebujesz odpornego frontu z surowców? Nadaj sygnał ratunkowy. Odpowiem na kanale 77.7 (albo e‑mailem, jeśli Twoje gołębie pocztowe są sprawne).</p>
+
+          <form class="radio" method="post">
+            <label>Operator / Baza
+              <input name="name" placeholder="Twoje imię lub firma" required>
+            </label>
+            <label>Sygnał (krótko)
+              <input name="message" placeholder="Co padło?" required>
+            </label>
+            <label>Priorytet
+              <select name="priority">
+                <option>Normalny</option>
+                <option>Alarmowy</option>
+                <option>Nuklearny</option>
+              </select>
+            </label>
+            <button class="cta" type="submit">Transmituj SOS</button>
+          </form>
+
+          <p class="alt">Wolisz bezpośrednio? Mail: <a href="mailto:your@email.example">your@email.example</a></p>
+          <p class="radio-note">"Nadaję na 77.7 — jeśli usłyszysz trzaski, to prawdopodobnie ja."</p>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="wrap">© Technomanta — zamień placeholdery na rolę/stack/cel. Zbudowane na kolejny Reset.</div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!doctype html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Technomancer Portfolio — Post‑Apo Tech</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Post‑Apo frontend developer — restores sites, slays zombie processes and deploys survival‑grade interfaces.">
+  </head>
+  <body data-lang="en">
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <div class="lang lang-en">
+      <header class="hero">
+        <div class="wrap">
+          <nav class="lang-switch" aria-label="language switch">
+            <a href="#" data-lang="en" class="active">EN</a>
+            <a href="#" data-lang="pl">PL</a>
+          </nav>
+          <button id="fx-toggle" aria-pressed="false" title="Reduce visual effects">Reduce FX</button>
+          <h1 class="headline">I bring dead sites back to life — even when the Web is a Wasteland.</h1>
+          <p class="sub">ROLE: <strong>FRONTEND DEVELOPER / SITE CREATOR</strong> — I patch ruins with tape, tests and clean code. Main tools: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
+          <nav class="top-nav">
+            <a href="#about">About</a>
+            <a href="#inventory">Inventory</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <a class="cta" href="#contact">Send SOS — Recruit Engineer</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <section data-section="about" class="card">
+          <h2>About — Survivor's Log</h2>
+          <p>I survived the Internet Explorer wars and still ship components that don't explode. I code faster than corrosion spreads and debug with a Geiger counter when necessary. I hook APIs to hand‑cranked generators, optimize bundles, and exterminate zombie processes with a single well‑placed console.log.</p>
+          <p class="goal">Goal: Find steady work inside the Safe Zone — let's build something that survives the next Reset.</p>
+        </section>
+
+        <section data-section="inventory" class="card">
+          <h2>Inventory — Gear & Skills</h2>
+          <ul class="gear">
+            <li><strong>JavaScript</strong> — Swiss army knife: sometimes cuts you, but gets the job done.</li>
+            <li><strong>React</strong> — Modular armor: components stack like plates; states are battle‑tested.</li>
+            <li><strong>CSS / SASS</strong> — Duct tape for interfaces: I restyle the ruins into something usable.</li>
+            <li><strong>WordPress</strong> — Fast shelter generator: quick to deploy, watch for mutated plugins.</li>
+            <li><strong>DevOps / CI</strong> — Backup generator: I automate builds and deliveries even on an unstable grid.</li>
+            <li><strong>Security</strong> — Geiger filter: I sniff leaks and patch backdoors before they spread.</li>
+          </ul>
+          <div class="stats">
+            <span>Speed: 8/10</span>
+            <span>Reliability: 9/10</span>
+            <span>Improvisation: 10/10</span>
+          </div>
+        </section>
+
+        <section data-section="projects" class="card">
+          <h2>Quest Log — Recovered Artifacts</h2>
+
+          <article class="project">
+            <h3>VaultUI</h3>
+            <p class="summary">Single‑page fortress UI with offline cache, auth and graceful degradation.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Legacy UI that crashed offline and leaked user sessions.</li>
+              <li><strong>Role:</strong> Frontend lead — rebuilt UI, added auth flow and cache strategy.</li>
+              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
+              <li><strong>Fix:</strong> Implemented SW caching (NetworkFirst/CacheFirst), centralized auth, and retry logic for flaky networks.</li>
+              <li><strong>Result:</strong> 85% fewer session errors, offline read mode, and faster perceived load.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>RadiantBlog</h3>
+            <p class="summary">Migration and hardening of a battered CMS into a manageable, secure WordPress shelter.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Outdated CMS with slow pages and unpatched plugins.</li>
+              <li><strong>Role:</strong> Fullstack solo — migration, cleanup, security hardening.</li>
+              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
+              <li><strong>Fix:</strong> Migrated content, locked down permissions, implemented cache & WAF rules.</li>
+              <li><strong>Result:</strong> 4x faster TTFB, automated backups, and reduced spam/attacks.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>SupplyChain Map</h3>
+            <p class="summary">Realtime resource routing visualizer with resilience for flaky connections.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Data feeds drop often; map UI would hang and lose state.</li>
+              <li><strong>Role:</strong> Frontend & integration — crafted resilient realtime client.</li>
+              <li><strong>Tech:</strong> WebSockets, D3, React, local caching.</li>
+              <li><strong>Fix:</strong> Added reconnection/backoff, local buffering and eventual consistency UI hints.</li>
+              <li><strong>Result:</strong> Stable visualization under 30% packet loss and clearer operator alerts.</li>
+            </ul>
+          </article>
+
+          <p class="note">Want these expanded into full case studies (tech, metrics, before/after screenshots)? I can write them up.</p>
+        </section>
+
+        <section data-section="contact" class="card contact">
+          <h2>Contact — Radio Terminal</h2>
+          <p>Got a failing site, a leaky API, or need a resilient front built from scrap? Broadcast your distress signal. I'll respond on channel 77.7 (or email, if your carrier pigeons are reliable).</p>
+
+          <form class="radio" method="post">
+            <label>Operator / Base Name
+              <input name="name" placeholder="Your name or company" required>
+            </label>
+            <label>Signal (brief)
+              <input name="message" placeholder="What's broken?" required>
+            </label>
+            <label>Priority
+              <select name="priority">
+                <option>Normal</option>
+                <option>Emergency</option>
+                <option>Nuclear</option>
+              </select>
+            </label>
+            <button class="cta" type="submit">Transmit SOS</button>
+          </form>
+
+          <p class="alt">Prefer direct comms? Email: <a href="mailto:your@email.example">your@email.example</a></p>
+          <p class="radio-note">"Transmitting on 77.7 — if you hear static, it's probably me."</p>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="wrap">© Technomancer — replace placeholders with real ROLE/STACK/GOAL. Built for the next Reset.</div>
+      </footer>
+    </div>
+
+    <!-- Polish content embedded for SPA switching -->
+    <div class="lang lang-pl">
+      <header class="hero">
+        <div class="wrap">
+          <nav class="lang-switch" aria-label="przełącznik języka">
+            <a href="#" data-lang="en">EN</a>
+            <a href="#" data-lang="pl" class="active">PL</a>
+          </nav>
+          <h1 class="headline">Przywrócę Twój serwis do życia — nawet jeśli Internet to Pustkowie.</h1>
+          <p class="sub">ROLA: <strong>FRONTEND DEVELOPER / TWÓRCA STRON</strong> — łataję ruiny taśmą, testami i czystą logiką. Główne narzędzia: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
+          <nav class="top-nav">
+            <a href="#about">O mnie</a>
+            <a href="#inventory">Ekwipunek</a>
+            <a href="#projects">Misje</a>
+            <a href="#contact">Kontakt</a>
+          </nav>
+          <a class="cta" href="#contact">Nadaj sygnał SOS — Zrekrutuj Inżyniera</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <section data-section="about" class="card">
+          <h2>O mnie — Dziennik Ocalałego</h2>
+          <p>Przetrwałem wojny z Internet Explorerem i nadal dostarczam komponenty, które nie wybuchają. Koduję szybciej niż postępuje korozja i debuguję licznikiem Geigera, gdy trzeba. Podłączam API do korb, optymalizuję bundle i eliminuję zombie‑procesy jedną linijką.</p>
+          <p class="goal">Cel: zdobyć stałe zlecenia w Bezpiecznej Strefie — zbudujmy coś, co przetrwa następny Reset.</p>
+        </section>
+
+        <section data-section="inventory" class="card">
+          <h2>Ekwipunek — Bronie i Umiejętności</h2>
+          <ul class="gear">
+            <li><strong>JavaScript</strong> — scyzoryk szwajcarski: czasem zdziera palce, ale zrobi wszystko.</li>
+            <li><strong>React</strong> — modułowa zbroja: składam komponenty jak płyty pancerza.</li>
+            <li><strong>CSS / SASS</strong> — taśma i lakier: zamaskuję rdzę layoutu.</li>
+            <li><strong>WordPress</strong> — szybki generator szałasu: stawia chatę błyskawicznie, ale uważaj na zmutowane wtyczki.</li>
+            <li><strong>DevOps / CI</strong> — agregat zapasowy: automatyzuję kompilacje i deploye nawet przy chwiejnej sieci.</li>
+            <li><strong>Bezpieczeństwo</strong> — filtr Geigera: wyłapuję wycieki i łataję backdoory zanim się rozsieją.</li>
+          </ul>
+          <div class="stats">
+            <span>Szybkość: 8/10</span>
+            <span>Solidność: 9/10</span>
+            <span>Improwizacja: 10/10</span>
+          </div>
+        </section>
+
+        <section data-section="projects" class="card">
+          <h2>Quest Log — Odzyskane Artefakty</h2>
+
+          <article class="project">
+            <h3>VaultUI</h3>
+            <p class="summary">Forteca UI typu SPA z cache offline, auth i łagodnym degradowaniem.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Stary interfejs, który padał offline i tracił sesje użytkowników.</li>
+              <li><strong>Rola:</strong> Frontend lead — przebudowa UI, flow autoryzacji i strategia cache.</li>
+              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
+              <li><strong>Naprawa:</strong> SW (NetworkFirst/CacheFirst), centralizacja auth i retry logic.</li>
+              <li><strong>Efekt:</strong> 85% mniej błędów sesji, tryb offline i szybsze odczucie ładowania.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>RadiantBlog</h3>
+            <p class="summary">Migracja i wzmocnienie CMS‑a do bezpiecznego WordPressa.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Przestarzały CMS, powolne strony i niezałatane wtyczki.</li>
+              <li><strong>Rola:</strong> Fullstack solo — migracja, cleanup, hardening.</li>
+              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
+              <li><strong>Naprawa:</strong> Migracja treści, blokada uprawnień, cache i reguły WAF.</li>
+              <li><strong>Efekt:</strong> 4x szybsze TTFB, automatyczne backupy i mniej spam/ataków.</li>
+            </ul>
+          </article>
+
+          <article class="project">
+            <h3>Mapa Zaopatrzenia</h3>
+            <p class="summary">Wizualizator tras zasobów w czasie rzeczywistym odporny na niestabilne łącza.</p>
+            <ul class="case">
+              <li><strong>Problem:</strong> Feed danych często zrywał połączenie; UI się zawieszał.</li>
+              <li><strong>Rola:</strong> Frontend & integracja — odporny klient realtime.</li>
+              <li><strong>Tech:</strong> WebSockets, D3, React, lokalny cache.</li>
+              <li><strong>Naprawa:</strong> Reconnection/backoff, buforowanie lokalne i wskazania spójności.</li>
+              <li><strong>Efekt:</strong> Stabilna wizualizacja przy 30% utracie pakietów i lepsze alerty dla operatorów.</li>
+            </ul>
+          </article>
+
+          <p class="note">Chcesz pełne case study? Rozwinę techniczne raporty z metrykami i kodem.</p>
+        </section>
+
+        <section data-section="contact" class="card contact">
+          <h2>Kontakt — Terminal Radiowy</h2>
+          <p>Masz awarię, wyciek danych albo potrzebujesz odpornego frontu z surowców? Nadaj sygnał ratunkowy. Odpowiem na kanale 77.7 (albo e‑mailem, jeśli Twoje gołębie pocztowe są sprawne).</p>
+
+          <form class="radio" method="post">
+            <label>Operator / Baza
+              <input name="name" placeholder="Twoje imię lub firma" required>
+            </label>
+            <label>Sygnał (krótko)
+              <input name="message" placeholder="Co padło?" required>
+            </label>
+            <label>Priorytet
+              <select name="priority">
+                <option>Normalny</option>
+                <option>Alarmowy</option>
+                <option>Nuklearny</option>
+              </select>
+            </label>
+            <button class="cta" type="submit">Transmituj SOS</button>
+          </form>
+
+          <p class="alt">Wolisz bezpośrednio? Mail: <a href="mailto:your@email.example">your@email.example</a></p>
+          <p class="radio-note">"Nadaję na 77.7 — jeśli usłyszysz trzaski, to prawdopodobnie ja."</p>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="wrap">© Technomanta — zamień placeholdery na rolę/stack/cel. Zbudowane na kolejny Reset.</div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
