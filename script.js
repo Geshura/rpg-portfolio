@@ -117,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   var themePref = localStorage.getItem('preferredTheme') || 'post-apo';
+  // Migrate old 'cthulhu' preference to 'mystery'
+  if(themePref === 'cthulhu') themePref = 'mystery';
   setTheme(themePref);
 
   document.querySelectorAll('.theme-switch a[data-theme]').forEach(function(a){
