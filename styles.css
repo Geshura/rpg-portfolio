@@ -132,6 +132,26 @@ h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
 .pdf-empty{color:var(--muted);padding:.8rem}
 .pdf-list .date{color:var(--muted);font-size:0.95rem}
 
+/* New layout: left sidebar filters + main content */
+.pdf-grid{display:grid;grid-template-columns:260px 1fr;gap:1rem;align-items:start}
+.pdf-sidebar{min-width:220px}
+.pdf-sidebar .pdf-filters{position:sticky;top:1rem}
+.pdf-main{min-width:0}
+.filter-list{max-height:60vh;overflow:auto;padding:.25rem 0;display:flex;flex-direction:column;gap:0.25rem}
+.filter-list::-webkit-scrollbar{width:10px}
+.filter-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.04);border-radius:6px}
+.chk{display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:0.95rem}
+.chk input[type="checkbox"]{width:16px;height:16px}
+
+@media(max-width:900px){
+  .pdf-grid{grid-template-columns:1fr}
+  .pdf-sidebar{order:2}
+  .pdf-main{order:1}
+  .filter-list{max-height:120px;flex-direction:row;flex-wrap:wrap;gap:.4rem}
+  .filter-list .chk{white-space:nowrap}
+  .pdf-sidebar .pdf-filters{position:relative;top:auto}
+}
+
 @media(max-width:720px){
   .pdf-controls{flex-direction:column;align-items:stretch}
   .pdf-controls label{width:100%}
