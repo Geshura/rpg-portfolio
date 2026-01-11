@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
     window.particlesEnabled = true;
     var mouseTrail = [];
     var mouseX = 0, mouseY = 0;
+    var clickRipples = [];
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
 
     function resize(){
@@ -45,6 +46,12 @@ document.addEventListener('DOMContentLoaded', function(){
       if(mouseTrail.length > 20) mouseTrail.shift();
     });
 
+    // Click-triggered sonar ripples
+    document.addEventListener('click', function(e){
+      clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
+      if(clickRipples.length > 12) clickRipples.shift();
+    });
+
     function drawMouseEffects(){
       var theme = document.body.getAttribute('data-theme');
       
@@ -61,6 +68,26 @@ document.addEventListener('DOMContentLoaded', function(){
           ctx.lineWidth = Math.max(1.4, (3.6 - i*0.6)) * DPR;
           ctx.beginPath();
           ctx.arc(mouseX, mouseY, radius, 0, Math.PI*2);
+          ctx.stroke();
+        }
+
+        // Kliknięcia: dodatkowe silne pierścienie z miejsca kliknięcia
+        var nowMs = performance.now();
+        for(var k=clickRipples.length-1; k>=0; k--){
+          var cr = clickRipples[k];
+          var age = nowMs - cr.start;
+          var dur = 1800;
+          if(age > dur){
+            clickRipples.splice(k,1);
+            continue;
+          }
+          var prog = age / dur;
+          var radiusClick = (120 + prog * 1600) * DPR;
+          var alphaClick = Math.max(0, 0.35 * (1 - prog));
+          ctx.strokeStyle = 'rgba(255,153,68,'+alphaClick+')';
+          ctx.lineWidth = 3 * DPR;
+          ctx.beginPath();
+          ctx.arc(cr.x, cr.y, radiusClick, 0, Math.PI*2);
           ctx.stroke();
         }
         
