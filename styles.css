@@ -732,12 +732,48 @@ h2::after{
   color:var(--text-primary);
 }
 
-.chk input[type="checkbox"]{
+.chk input[type="checkbox"],
+.chk input[type="radio"]{
+  appearance:none;
+  -webkit-appearance:none;
   width:18px;
   height:18px;
   cursor:pointer;
-  accent-color:var(--neon);
-  border-radius:4px;
+  border:2px solid var(--neon);
+  background:transparent;
+  border-radius:0;
+  position:relative;
+  transition:all 0.2s ease;
+  flex-shrink:0;
+}
+
+.chk input[type="checkbox"]:hover,
+.chk input[type="radio"]:hover{
+  border-color:var(--neon-2);
+  box-shadow:0 0 8px rgba(0,255,209,0.3);
+}
+
+.chk input[type="checkbox"]:checked,
+.chk input[type="radio"]:checked{
+  background:var(--neon);
+  border-color:var(--neon);
+}
+
+.chk input[type="checkbox"]:checked::after,
+.chk input[type="radio"]:checked::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:8px;
+  height:8px;
+  background:var(--bg-0);
+  border-radius:0;
+}
+
+.chk input[type="radio"]{
+  border-radius:0;
 }
 
 .chk.select-all{
