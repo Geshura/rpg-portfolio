@@ -361,7 +361,11 @@ document.addEventListener('DOMContentLoaded', function(){
       if(!container) return;
       if(!items || items.length===0){ container.innerHTML = '<div class="pdf-empty">Brak pozycji do wyświetlenia.</div>'; return; }
       var html = ['<table><thead><tr>',
-        '<th>Wydawnictwo</th>','<th>System</th>','<th>Tytuł</th>','<th>Data sprzedaży</th>','<th>Data uzyskania</th>',
+        '<th class="sortable" data-field="publisher">Wydawnictwo</th>',
+        '<th class="sortable" data-field="system">System</th>',
+        '<th class="sortable" data-field="title">Tytuł</th>',
+        '<th class="sortable" data-field="date_sale">Data sprzedaży</th>',
+        '<th class="sortable" data-field="date_acquired">Data uzyskania</th>',
         '</tr></thead><tbody>'];
       items.forEach(function(it){
         var pub = safeGet(it.publisher);
@@ -385,6 +389,33 @@ document.addEventListener('DOMContentLoaded', function(){
       });
       html.push('</tbody></table>');
       container.innerHTML = html.join('');
+
+      // attach click handlers to header cells to enable sorting by column
+      try{
+        var ths = container.querySelectorAll('th.sortable');
+        ths.forEach(function(th){
+          var f = th.getAttribute('data-field');
+          // mark active sorted column
+          if(sortFieldEl && sortFieldEl.value === f){
+            th.classList.add((sortOrderEl && sortOrderEl.value==='asc')? 'sorted-asc':'sorted-desc');
+          }
+          th.addEventListener('click', function(){
+            if(!sortFieldEl || !sortOrderEl) return;
+            var field = th.getAttribute('data-field');
+            if(sortFieldEl.value === field){
+              // toggle order
+              sortOrderEl.value = (sortOrderEl.value === 'asc') ? 'desc' : 'asc';
+            } else {
+              sortFieldEl.value = field;
+              sortOrderEl.value = 'asc';
+            }
+            // update header classes
+            container.querySelectorAll('th.sortable').forEach(function(h){ h.classList.remove('sorted-asc','sorted-desc'); });
+            th.classList.add(sortOrderEl.value==='asc' ? 'sorted-asc' : 'sorted-desc');
+            applyFiltersAndSort();
+          });
+        });
+      }catch(e){ /* ignore attach errors */ }
     }
 
     function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
@@ -393,6 +424,8 @@ document.addEventListener('DOMContentLoaded', function(){
       var q = (searchEl && searchEl.value) ? searchEl.value.trim().toLowerCase() : '';
       var field = sortFieldEl ? sortFieldEl.value : 'title';
       var order = sortOrderEl ? sortOrderEl.value : 'asc';
+      // persist preference
+      try{ localStorage.setItem('pdfSort', JSON.stringify({field: field, order: order})); }catch(e){}
       var filtered = pdfData.filter(function(it){
         if(!q) return true;
         var aggregated = [safeGet(it.publisher), safeGet(it.system), safeGet(it.title)].join(' ').toLowerCase();
@@ -410,6 +443,12 @@ document.addEventListener('DOMContentLoaded', function(){
       container.innerHTML = '<p class="summary">Ładowanie listy...</p>';
       fetch('rpg-pdfs.json').then(function(resp){ if(!resp.ok) throw new Error('HTTP '+resp.status); return resp.json(); }).then(function(data){
         pdfData = Array.isArray(data) ? data : (data.items || []);
+        // restore saved sort preference if present
+        try{
+          var saved = JSON.parse(localStorage.getItem('pdfSort')||'{}');
+          if(saved && saved.field && sortFieldEl) sortFieldEl.value = saved.field;
+          if(saved && saved.order && sortOrderEl) sortOrderEl.value = saved.order;
+        }catch(e){}
         applyFiltersAndSort();
       }).catch(function(err){ container.innerHTML = '<div class="pdf-empty">Nie udało się załadować rpg-pdfs.json ('+ (err.message||'') +')</div>'; });
     }
