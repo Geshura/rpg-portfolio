@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       
       if(theme === 'mystery'){
-        // Mystery: Spiralne cząstki przyciągane do kursora + mroczne macki
+        // Mystery: Spiralne cząstki + mroczne macki z krawędzi ekranu
         ctx.globalCompositeOperation = 'lighter';
         
         // Świecący okrąg wokół kursora
@@ -154,21 +154,31 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Macki w stylu Cthulhu (długie, poskręcane, mroczne)
+        // Macki w stylu Cthulhu (z off-screen rogów w stronę celu)
         var tentacles = 10;
         var now = Date.now() * 0.0016;
+        var targetActive = performance.now() < lastClickTarget.until;
+        var targetX = targetActive ? lastClickTarget.x : (mouseX || w*0.5);
+        var targetY = targetActive ? lastClickTarget.y : (mouseY || h*0.5);
+        var corners = [
+          {x: -220*DPR, y: -220*DPR},
+          {x: w + 220*DPR, y: -220*DPR},
+          {x: w + 220*DPR, y: h + 220*DPR},
+          {x: -220*DPR, y: h + 220*DPR}
+        ];
         for(var ti=0; ti<tentacles; ti++){
           var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
-          var fleeActive = mouseDown || (performance.now() < tentacleFleeUntil);
-          var screenSpan = Math.max(w, h);
-          var len = fleeActive ? (screenSpan * 0.8 + 220 * DPR) : (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
           var segs = 7;
           var anchor = tentacleAnchors[ti % tentacleAnchors.length];
-          var originRadius = fleeActive ? (screenSpan * 0.9 + 260 * DPR) : (180 + 160 * Math.sin(now*0.55 + anchor.phase)) * DPR;
-          var jitter = fleeActive ? (240 + 140 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR : (90 + 70 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR;
-          var originAngle = baseAngle + anchor.offset + Math.sin(now*0.7 + anchor.phase) * 1.1;
-          var originX = mouseX + Math.cos(originAngle) * (originRadius + jitter);
-          var originY = mouseY + Math.sin(originAngle) * (originRadius + jitter);
+          var corner = corners[ti % corners.length];
+          var jitterOut = 140 * DPR;
+          var originX = corner.x + Math.cos(anchor.offset + now + anchor.phase) * jitterOut;
+          var originY = corner.y + Math.sin(anchor.offset + now*1.2 + anchor.phase) * jitterOut;
+          var dxTarget = targetX - originX;
+          var dyTarget = targetY - originY;
+          var baseLen = Math.sqrt(dxTarget*dxTarget + dyTarget*dyTarget);
+          var len = baseLen * 1.05 + 160 * DPR;
+          var aimAngle = Math.atan2(dyTarget, dxTarget);
           ctx.strokeStyle = 'rgba(6,12,10,0.8)';
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
@@ -182,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function(){
             ctx.lineWidth = (6.5 * taper) * DPR;
             var wave = Math.sin(now * 3.4 + s*2.1 + tentacleSeeds[ti % tentacleSeeds.length]) * (44 + 28*s) * DPR;
             var wave2 = Math.cos(now * 1.6 + s*1.1 + ti*0.7) * (22 + 12*s) * DPR;
-            var angle = baseAngle + wave * 0.0043;
+            var angle = aimAngle + baseAngle*0.05 + wave * 0.0043;
             var px = originX + Math.cos(angle) * len * progress + wave2 * 0.55;
             var py = originY + Math.sin(angle) * len * progress + wave * 0.22;
             ctx.lineTo(px, py);
@@ -198,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function(){
             var progress2 = s2 / segs;
             var waveA = Math.sin(now * 2.6 + s2*1.4 + ti) * (22 + 12*s2) * DPR;
             var waveB = Math.cos(now * 3.1 + s2*1.8 + ti*0.6) * (18 + 10*s2) * DPR;
-            var angleA = baseAngle + waveA * 0.0035;
+            var angleA = aimAngle + baseAngle*0.04 + waveA * 0.0035;
             var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.25;
             var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.18;
             ctx.lineTo(px2, py2);
@@ -214,10 +224,10 @@ document.addEventListener('DOMContentLoaded', function(){
           if(dist < 200*DPR && dist > 20*DPR){
             var force = (200*DPR - dist) / (200*DPR) * 0.15;
             // Dodaj spiralny ruch
-            var angle = Math.atan2(dy, dx);
-            var perpAngle = angle + Math.PI/2;
-            p.vx += Math.cos(angle) * force + Math.cos(perpAngle) * force * 0.5;
-            p.vy += Math.sin(angle) * force + Math.sin(perpAngle) * force * 0.5;
+            var angle2 = Math.atan2(dy, dx);
+            var perpAngle = angle2 + Math.PI/2;
+            p.vx += Math.cos(angle2) * force + Math.cos(perpAngle) * force * 0.5;
+            p.vy += Math.sin(angle2) * force + Math.sin(perpAngle) * force * 0.5;
           }
         });
       }
