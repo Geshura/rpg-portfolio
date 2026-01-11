@@ -563,9 +563,10 @@ h2::after{
 }
 
 .pdf-list td{
-  padding:1.2rem 1.5rem;
+  padding:1rem 1.2rem;
   border-bottom:1px solid var(--border);
   vertical-align:middle;
+  transition:all 0.2s ease;
 }
 
 .pdf-list tr{
@@ -573,18 +574,22 @@ h2::after{
 }
 
 .pdf-list tbody tr:nth-child(odd){
-  background:transparent;
+  background:rgba(0,0,0,0.2);
 }
 
 .pdf-list tbody tr:nth-child(even){
-  background:rgba(255,255,255,0.015);
+  background:rgba(0,0,0,0.3);
 }
 
 .pdf-list tbody tr:hover{
-  background:linear-gradient(90deg, var(--neon), var(--neon-2));
-  background-clip:padding-box;
-  box-shadow:inset 3px 0 0 var(--neon), inset -3px 0 0 var(--neon-2);
+  background:rgba(255,255,255,0.05);
+  border-left:3px solid var(--neon);
+  border-right:3px solid var(--neon-2);
   transform:translateX(0);
+}
+
+.pdf-list tbody tr:hover td{
+  color:var(--text-primary);
 }
 
 .pdf-list img.thumb{
