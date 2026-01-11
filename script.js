@@ -121,6 +121,31 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.beginPath();
         ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
         ctx.fill();
+
+        // Macki w stylu Cthulhu
+        var tentacles = 6;
+        var now = Date.now() * 0.002;
+        for(var ti=0; ti<tentacles; ti++){
+          var baseAngle = (ti / tentacles) * Math.PI * 2;
+          var len = 120 * DPR + 20 * Math.sin(now + ti*1.3) * DPR;
+          var segs = 5;
+          ctx.strokeStyle = 'rgba(0,208,132,0.35)';
+          ctx.lineWidth = 2 * DPR;
+          ctx.beginPath();
+          var prevX = mouseX;
+          var prevY = mouseY;
+          ctx.moveTo(prevX, prevY);
+          for(var s=1; s<=segs; s++){
+            var progress = s / segs;
+            var wave = Math.sin(now * 1.4 + s*0.9 + ti) * (10 + 6*s) * DPR;
+            var angle = baseAngle + wave * 0.0025;
+            var px = mouseX + Math.cos(angle) * len * progress;
+            var py = mouseY + Math.sin(angle) * len * progress;
+            ctx.lineTo(px, py);
+            prevX = px; prevY = py;
+          }
+          ctx.stroke();
+        }
         
         // Przyciąganie cząstek do kursora ze spiralnym ruchem
         particles.forEach(function(p){
