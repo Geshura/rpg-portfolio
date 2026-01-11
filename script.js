@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var DPR = window.devicePixelRatio || 1;
     var w, h, particles;
     window.particlesEnabled = true;
+    var mouseTrail = [];
+    var mouseX = 0, mouseY = 0;
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -34,6 +36,95 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }
 
+    // Mouse tracking
+    document.addEventListener('mousemove', function(e){
+      mouseX = e.clientX * DPR;
+      mouseY = e.clientY * DPR;
+      mouseTrail.push({x: mouseX, y: mouseY, life: 1});
+      if(mouseTrail.length > 20) mouseTrail.shift();
+    });
+
+    function drawMouseEffects(){
+      var theme = document.body.getAttribute('data-theme');
+      
+      if(theme === 'post-apo'){
+        // Post-Apo: Огненные искры следующие за курсором
+        ctx.globalCompositeOperation = 'lighter';
+        for(var i=0; i<mouseTrail.length; i++){
+          var t = mouseTrail[i];
+          t.life -= 0.05;
+          var alpha = t.life * 0.6;
+          var size = (1 - t.life) * 30;
+          
+          var glow = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, size);
+          glow.addColorStop(0, 'rgba(255,153,68,'+(alpha)+')');
+          glow.addColorStop(0.5, 'rgba(255,204,102,'+(alpha*0.5)+')');
+          glow.addColorStop(1, 'rgba(255,153,68,0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, size, 0, Math.PI*2);
+          ctx.fill();
+        }
+        mouseTrail = mouseTrail.filter(function(t){ return t.life > 0; });
+      }
+      
+      if(theme === 'cyberpunk'){
+        // Cyberpunk: Świecące linie grid reagujące na kursor
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = 'rgba(0,255,255,0.3)';
+        ctx.lineWidth = 2 * DPR;
+        
+        // Vertical lines
+        for(var x = 0; x < w; x += 60*DPR){
+          var dist = Math.abs(x - mouseX);
+          if(dist < 200*DPR){
+            var alpha = 1 - (dist / (200*DPR));
+            ctx.strokeStyle = 'rgba(0,255,255,'+(alpha*0.4)+')';
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, h);
+            ctx.stroke();
+          }
+        }
+        
+        // Horizontal lines
+        for(var y = 0; y < h; y += 60*DPR){
+          var dist = Math.abs(y - mouseY);
+          if(dist < 200*DPR){
+            var alpha = 1 - (dist / (200*DPR));
+            ctx.strokeStyle = 'rgba(255,0,110,'+(alpha*0.3)+')';
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      if(theme === 'mystery'){
+        // Mystery: Mgła/aura wokół kursora
+        ctx.globalCompositeOperation = 'lighter';
+        for(var i=0; i<mouseTrail.length; i++){
+          var t = mouseTrail[i];
+          t.life -= 0.03;
+          var alpha = t.life * 0.4;
+          var size = (1 - t.life) * 80 + 40;
+          
+          var glow = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, size);
+          glow.addColorStop(0, 'rgba(0,208,132,'+(alpha)+')');
+          glow.addColorStop(0.3, 'rgba(157,78,221,'+(alpha*0.6)+')');
+          glow.addColorStop(1, 'rgba(0,208,132,0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, size, 0, Math.PI*2);
+          ctx.fill();
+        }
+        mouseTrail = mouseTrail.filter(function(t){ return t.life > 0; });
+      }
+      
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
     function step(){
       if(!window.particlesEnabled){
         // when disabled, reduce CPU by drawing rarely
@@ -41,6 +132,10 @@ document.addEventListener('DOMContentLoaded', function(){
         return;
       }
       ctx.clearRect(0,0,w,h);
+      
+      // Draw mouse effects first
+      drawMouseEffects();
+      
       // subtle gradient overlay
       var grad = ctx.createLinearGradient(0,0,w,h);
       grad.addColorStop(0,'rgba(0,30,60,0.05)');
