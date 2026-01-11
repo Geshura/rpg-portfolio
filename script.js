@@ -425,10 +425,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     /* --- Filter UI build & handlers --- */
-    var possessionToggle = document.getElementById('pdf-possession-toggle');
     var filterLangEl = document.getElementById('filter-languages');
     var filterPubEl = document.getElementById('filter-publishers');
     var filterSysEl = document.getElementById('filter-systems');
+    var filterPossessionEl = document.getElementById('filter-possession');
 
     var selectedLanguages = new Set();
     var selectedPublishers = new Set();
@@ -467,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
       }
 
+      // Build standard filters
       renderSet(filterLangEl, langs, 'lang', function(){
         selectedLanguages = new Set(Array.from(filterLangEl.querySelectorAll('input:checked')).map(function(i){ return i.getAttribute('data-value'); }));
         applyFiltersAndSort();
@@ -479,16 +480,26 @@ document.addEventListener('DOMContentLoaded', function(){
         selectedSystems = new Set(Array.from(filterSysEl.querySelectorAll('input:checked')).map(function(i){ return i.getAttribute('data-value'); }));
         applyFiltersAndSort();
       });
-    }
 
-    if(possessionToggle){
-      possessionToggle.addEventListener('click', function(){
-        // cycle: all -> have -> want -> all
-        if(possessionFilter === 'all'){ possessionFilter = 'have'; possessionToggle.textContent = 'Filtr: Posiadane'; possessionToggle.setAttribute('aria-pressed','true'); }
-        else if(possessionFilter === 'have'){ possessionFilter = 'want'; possessionToggle.textContent = 'Filtr: Poszukiwane'; possessionToggle.setAttribute('aria-pressed','true'); }
-        else { possessionFilter = 'all'; possessionToggle.textContent = 'Filtr: Wszystkie'; possessionToggle.setAttribute('aria-pressed','false'); }
-        applyFiltersAndSort();
-      });
+      // Build possession filter as radio buttons
+      if(filterPossessionEl){
+        var possessionOptions = [
+          {value: 'all', label: 'Wszystkie'},
+          {value: 'have', label: 'Posiadane'},
+          {value: 'want', label: 'Poszukiwane'}
+        ];
+        var possessionHtml = possessionOptions.map(function(opt, i){
+          var id = 'poss-'+i;
+          var checked = opt.value === 'all' ? ' checked' : '';
+          return '<label class="chk"><input type="radio" id="'+id+'" name="possession-filter" value="'+opt.value+'"'+checked+'> '+opt.label+'</label>';
+        }).join('');
+        filterPossessionEl.innerHTML = possessionHtml;
+        filterPossessionEl.querySelectorAll('input[type="radio"]').forEach(function(radio){
+          radio.addEventListener('change', function(){
+            if(this.checked){ possessionFilter = this.value; applyFiltersAndSort(); }
+          });
+        });
+      }
     }
 
     function escapeHtml(s){ return String(s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
