@@ -610,13 +610,13 @@ h2::after{
 /* Enhanced left sidebar filters + main content */
 .pdf-grid{
   display:grid;
-  grid-template-columns:180px 1fr;
-  gap:2.5rem;
+  grid-template-columns:150px 1fr;
+  gap:1.5rem;
   align-items:start;
 }
 
 .pdf-sidebar{
-  min-width:160px;
+  min-width:140px;
 }
 
 .pdf-sidebar .pdf-filters{
@@ -625,7 +625,7 @@ h2::after{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius-md);
-  padding:1.5rem;
+  padding:1.2rem;
   box-shadow:var(--shadow-md);
 }
 
@@ -634,7 +634,7 @@ h2::after{
 }
 
 .filter-group{
-  margin-bottom:1.5rem;
+  margin-bottom:1.2rem;
 }
 
 .filter-group:last-child{
@@ -644,9 +644,9 @@ h2::after{
 .filter-group strong{
   display:block;
   color:var(--text-primary);
-  font-size:0.95rem;
+  font-size:0.85rem;
   font-weight:600;
-  margin-bottom:0.8rem;
+  margin-bottom:0.6rem;
   text-transform:uppercase;
   letter-spacing:0.05em;
 }
