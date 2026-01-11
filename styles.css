@@ -410,23 +410,31 @@ h2::after{
 }
 
 .project{
-  padding:.8rem 0;
-  margin-bottom:1rem;
+  padding:1.2rem 0;
+  margin-bottom:1.5rem;
+  border-left:3px solid var(--neon);
+  padding-left:1.5rem;
 }
 
 .project:last-child{
   margin-bottom:0;
+  border-bottom:2px solid var(--neon-2);
+  padding-bottom:1.5rem;
 }
 
 .project h3{
   margin:.2rem 0;
   color:var(--neon);
-  text-shadow:0 0 10px rgba(55,182,255,0.15);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  text-shadow:0 0 15px rgba(0,0,0,0.3);
 }
 
 .project .summary{
-  color:var(--text-secondary);
-  margin-bottom:.6rem;
+  color:var(--text-primary);
+  margin-bottom:.8rem;
+  font-weight:500;
 }
 
 .project .case{
