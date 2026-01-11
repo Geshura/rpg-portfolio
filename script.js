@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var mouseX = 0, mouseY = 0;
     var clickRipples = [];
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
+    var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -158,10 +159,12 @@ document.addEventListener('DOMContentLoaded', function(){
           var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
           var len = (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
           var segs = 7;
-          var originRadius = (90 + 120 * Math.sin(now*0.9 + ti*0.7)) * DPR;
-          var originAngle = baseAngle + Math.sin(now*1.3 + ti) * 0.6;
-          var originX = mouseX + Math.cos(originAngle) * originRadius;
-          var originY = mouseY + Math.sin(originAngle) * originRadius;
+          var anchor = tentacleAnchors[ti % tentacleAnchors.length];
+          var originRadius = (180 + 160 * Math.sin(now*0.55 + anchor.phase)) * DPR;
+          var jitter = (90 + 70 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR;
+          var originAngle = baseAngle + anchor.offset + Math.sin(now*0.7 + anchor.phase) * 1.1;
+          var originX = mouseX + Math.cos(originAngle) * (originRadius + jitter);
+          var originY = mouseY + Math.sin(originAngle) * (originRadius + jitter);
           ctx.strokeStyle = 'rgba(6,12,10,0.8)';
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
