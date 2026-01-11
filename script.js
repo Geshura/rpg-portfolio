@@ -66,10 +66,8 @@ document.addEventListener('DOMContentLoaded', function(){
       clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
       if(clickRipples.length > 12) clickRipples.shift();
       lastClickTarget = { x: e.clientX * DPR, y: e.clientY * DPR, until: performance.now() + 1400 };
-      tentacleState.mode = 'pounce';
-      tentacleState.targetX = lastClickTarget.x;
-      tentacleState.targetY = lastClickTarget.y;
-      tentacleState.last = performance.now();
+      beamShots.push({ x: lastClickTarget.x, y: lastClickTarget.y, start: performance.now() });
+      if(beamShots.length > 6) beamShots.shift();
     });
 
     function drawMouseEffects(){
@@ -158,88 +156,94 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       
       if(theme === 'mystery'){
-        // Mystery: Spiralne cząstki + mroczne macki z krawędzi ekranu
+        // Mystery: Eldritch Eye / sigil orbit instead of tentacle
         ctx.globalCompositeOperation = 'lighter';
-        
-        // Świecący okrąg wokół kursora
-        var glow = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 100*DPR);
-        glow.addColorStop(0, 'rgba(0,208,132,0.2)');
-        glow.addColorStop(0.5, 'rgba(157,78,221,0.15)');
-        glow.addColorStop(1, 'rgba(0,208,132,0)');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Jedna macka: krzywa nieskończoności (∞) + subtelny jitter; klik = skok do celu
-        var nowBase = Date.now() * 0.0010;
         var nowMs = performance.now();
-        var dt = Math.min(50, nowMs - (tentacleState.last || nowMs));
-        tentacleState.last = nowMs;
+        var tBase = nowMs * 0.00105;
+        orbPhase += 0.0014 * (Date.now() - (window.__lastOrbTime||Date.now()));
+        window.__lastOrbTime = Date.now();
 
-        var clickActive = performance.now() < lastClickTarget.until;
-        if(clickActive){
-          tentacleState.mode = 'pounce';
-          tentacleState.targetX = lastClickTarget.x;
-          tentacleState.targetY = lastClickTarget.y;
-        } else if(tentacleState.mode === 'pounce' && performance.now() >= lastClickTarget.until){
-          tentacleState.mode = 'drift';
+        var orbPos = infinityPath(orbPhase);
+        var wobble = 26 * DPR;
+        orbPos.x += Math.cos(tBase*1.6) * wobble;
+        orbPos.y += Math.sin(tBase*1.3) * wobble;
+
+        // core orb
+        var orbGlow = ctx.createRadialGradient(orbPos.x, orbPos.y, 0, orbPos.x, orbPos.y, 140*DPR);
+        orbGlow.addColorStop(0, 'rgba(0,208,132,0.35)');
+        orbGlow.addColorStop(0.5, 'rgba(157,78,221,0.2)');
+        orbGlow.addColorStop(1, 'rgba(0,208,132,0)');
+        ctx.fillStyle = orbGlow;
+        ctx.beginPath(); ctx.arc(orbPos.x, orbPos.y, 140*DPR, 0, Math.PI*2); ctx.fill();
+
+        // rotating arcs (sigil rings)
+        var rings = 3;
+        for(var r=0; r<rings; r++){
+          var radius = 90*DPR + r*38*DPR;
+          var arcStart = tBase*0.7 + r*1.3;
+          var arcLen = Math.PI*0.7 + Math.sin(tBase*0.9 + r)*0.4;
+          ctx.strokeStyle = r%2===0 ? 'rgba(0,208,132,0.5)' : 'rgba(157,78,221,0.45)';
+          ctx.lineWidth = (2.2 - r*0.3) * DPR;
+          ctx.beginPath();
+          ctx.arc(orbPos.x, orbPos.y, radius, arcStart, arcStart + arcLen);
+          ctx.stroke();
         }
 
-        var phaseSpeed = tentacleState.mode === 'pounce' ? 0.0022 : 0.0012;
-        tentacleState.phase += dt * phaseSpeed;
-
-        var basePos = infinityPath(tentacleState.phase);
-        var jitterAmp = 46 * DPR;
-        var jitter = Math.sin(nowBase * 1.7 + tentacleState.phase) * jitterAmp;
-        var originX = basePos.x + Math.cos(tentacleState.phase*1.4) * jitter;
-        var originY = basePos.y + Math.sin(tentacleState.phase*1.1) * jitter;
-
-        var targetX = tentacleState.mode === 'pounce' ? tentacleState.targetX : basePos.x + Math.cos(tentacleState.phase) * 180;
-        var targetY = tentacleState.mode === 'pounce' ? tentacleState.targetY : basePos.y + Math.sin(tentacleState.phase*1.2) * 160;
-
-        var dxTarget = targetX - originX;
-        var dyTarget = targetY - originY;
-        var aimAngle = Math.atan2(dyTarget, dxTarget);
-        var baseLen = tentacleState.mode === 'pounce' ? 460 * DPR : 340 * DPR;
-        var len = baseLen;
-        var segs = 9;
-
-        ctx.strokeStyle = 'rgba(6,12,10,0.78)';
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        var prevX = originX;
-        var prevY = originY;
-        ctx.moveTo(prevX, prevY);
-        for(var s=1; s<=segs; s++){
-          var progress = s / segs;
-          var taper = 1 - progress*0.38;
-          ctx.lineWidth = (6.1 * taper) * DPR;
-          var wave = Math.sin(nowBase * (0.9 + 0.3*s) + s*1.7) * (28 + 20*s) * DPR;
-          var wave2 = Math.cos(nowBase * (0.8 + 0.25*s) + s*1.3) * (17 + 10*s) * DPR;
-          var angle = aimAngle + wave * 0.003;
-          var px = originX + Math.cos(angle) * len * progress + wave2 * 0.34;
-          var py = originY + Math.sin(angle) * len * progress + wave * 0.15;
-          ctx.lineTo(px, py);
-          prevX = px; prevY = py;
+        // shards orbiting
+        for(var sh=0; sh<10; sh++){
+          var ang = tBase*1.4 + sh*0.65;
+          var rad = 170*DPR + Math.sin(tBase*1.1 + sh)*24*DPR;
+          var sx = orbPos.x + Math.cos(ang)*rad;
+          var sy = orbPos.y + Math.sin(ang)*rad;
+          ctx.strokeStyle = 'rgba(0,255,209,0.35)';
+          ctx.lineWidth = 1.6 * DPR;
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(sx + Math.cos(ang+0.4)*18*DPR, sy + Math.sin(ang+0.4)*18*DPR);
+          ctx.stroke();
         }
-        ctx.stroke();
-        // Jasny rdzeń macki
-        ctx.strokeStyle = 'rgba(0,208,132,0.45)';
-        ctx.lineWidth = 2.5 * DPR;
-        ctx.beginPath();
-        ctx.moveTo(originX, originY);
-        for(var s2=1; s2<=segs; s2++){
-          var progress2 = s2 / segs;
-          var waveA = Math.sin(nowBase * (0.95) + s2*1.32) * (15 + 10*s2) * DPR;
-          var waveB = Math.cos(nowBase * (1.18) + s2*1.5) * (12 + 8*s2) * DPR;
-          var angleA = aimAngle + waveA * 0.0025;
-          var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.17;
-          var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.11;
-          ctx.lineTo(px2, py2);
+
+        // beams to click targets
+        for(var b=beamShots.length-1; b>=0; b--){
+          var shot = beamShots[b];
+          var age = nowMs - shot.start;
+          var dur = 1000;
+          if(age > dur){ beamShots.splice(b,1); continue; }
+          var prog = age/dur;
+          var alphaB = Math.max(0, 0.55 * (1-prog));
+          var gradB = ctx.createLinearGradient(orbPos.x, orbPos.y, shot.x, shot.y);
+          gradB.addColorStop(0, 'rgba(0,255,209,'+alphaB+')');
+          gradB.addColorStop(1, 'rgba(157,78,221,'+(alphaB*0.6)+')');
+          ctx.strokeStyle = gradB;
+          ctx.lineWidth = 3.5 * DPR;
+          ctx.beginPath();
+          ctx.moveTo(orbPos.x, orbPos.y);
+          ctx.lineTo(shot.x, shot.y);
+          ctx.stroke();
+
+          // impact burst
+          var burstR = 40*DPR + prog*120*DPR;
+          var burst = ctx.createRadialGradient(shot.x, shot.y, 0, shot.x, shot.y, burstR);
+          burst.addColorStop(0, 'rgba(157,78,221,'+(alphaB*0.8)+')');
+          burst.addColorStop(1, 'rgba(0,208,132,0)');
+          ctx.fillStyle = burst;
+          ctx.beginPath(); ctx.arc(shot.x, shot.y, burstR, 0, Math.PI*2); ctx.fill();
         }
-        ctx.stroke();
+
+        // Przyciąganie cząstek do kursora ze spiralnym ruchem
+        particles.forEach(function(p){
+          var dx = mouseX - p.x;
+          var dy = mouseY - p.y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 200*DPR && dist > 20*DPR){
+            var force = (200*DPR - dist) / (200*DPR) * 0.15;
+            var angle2 = Math.atan2(dy, dx);
+            var perpAngle = angle2 + Math.PI/2;
+            p.vx += Math.cos(angle2) * force + Math.cos(perpAngle) * force * 0.5;
+            p.vy += Math.sin(angle2) * force + Math.sin(perpAngle) * force * 0.5;
+          }
+        });
+      }
         
         // Przyciąganie cząstek do kursora ze spiralnym ruchem
         particles.forEach(function(p){
