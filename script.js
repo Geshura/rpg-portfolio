@@ -361,6 +361,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if(!container) return;
       if(!items || items.length===0){ container.innerHTML = '<div class="pdf-empty">Brak pozycji do wyświetlenia.</div>'; return; }
       var html = ['<table><thead><tr>',
+        '<th class="sortable" data-field="language">Język</th>',
         '<th class="sortable" data-field="publisher">Wydawnictwo</th>',
         '<th class="sortable" data-field="system">System</th>',
         '<th class="sortable" data-field="title">Tytuł</th>',
@@ -368,6 +369,7 @@ document.addEventListener('DOMContentLoaded', function(){
         '<th class="sortable" data-field="date_acquired">Data uzyskania</th>',
         '</tr></thead><tbody>'];
       items.forEach(function(it){
+        var lang = safeGet(it.language);
         var pub = safeGet(it.publisher);
         var sys = safeGet(it.system);
         var title = safeGet(it.title);
@@ -380,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(link){ titleHtml += '<a href="'+link+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(title)+'</a>'; }
         else { titleHtml += '<span>'+escapeHtml(title)+'</span>'; }
         html.push('<tr>',
+          '<td>'+escapeHtml(lang)+'</td>',
           '<td>'+escapeHtml(pub)+'</td>',
           '<td>'+escapeHtml(sys)+'</td>',
           '<td><div class="pdf-meta">'+titleHtml+'</div></td>',
