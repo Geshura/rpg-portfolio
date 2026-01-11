@@ -445,11 +445,26 @@ document.addEventListener('DOMContentLoaded', function(){
       function renderSet(container, items, prefix, onChange){
         if(!container) return;
         var arr = Array.from(items).filter(Boolean).sort(function(a,b){ return a.localeCompare(b,'pl',{sensitivity:'base'}); });
-        container.innerHTML = arr.map(function(v,i){
+        var selectAllId = prefix+'-selectAll';
+        var html = '<label class="chk select-all"><input type="checkbox" id="'+selectAllId+'" data-selectall="true"> Wszystkie</label>';
+        html += arr.map(function(v,i){
           var id = prefix+'-'+i;
           return '<label class="chk"><input type="checkbox" id="'+id+'" data-value="'+escapeHtml(v)+'"> '+escapeHtml(v)+'</label>';
         }).join('');
-        container.querySelectorAll('input[type="checkbox"]').forEach(function(cb){ cb.addEventListener('change', onChange); });
+        container.innerHTML = html;
+        var selectAllCb = document.getElementById(selectAllId);
+        var checkboxes = container.querySelectorAll('input[type="checkbox"]:not([data-selectall])');
+        selectAllCb.addEventListener('change', function(){
+          checkboxes.forEach(function(cb){ cb.checked = selectAllCb.checked; });
+          onChange();
+        });
+        checkboxes.forEach(function(cb){
+          cb.addEventListener('change', function(){
+            var allChecked = Array.from(checkboxes).every(function(c){ return c.checked; });
+            selectAllCb.checked = allChecked;
+            onChange();
+          });
+        });
       }
 
       renderSet(filterLangEl, langs, 'lang', function(){
