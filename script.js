@@ -48,24 +48,31 @@ document.addEventListener('DOMContentLoaded', function(){
       var theme = document.body.getAttribute('data-theme');
       
       if(theme === 'post-apo'){
-        // Post-Apo: Огненные искры следующие за курсором
+        // Post-Apo: Fale wypychające cząstki od kursora + pomarańczowe pierścienie
         ctx.globalCompositeOperation = 'lighter';
-        for(var i=0; i<mouseTrail.length; i++){
-          var t = mouseTrail[i];
-          t.life -= 0.05;
-          var alpha = t.life * 0.6;
-          var size = (1 - t.life) * 30;
-          
-          var glow = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, size);
-          glow.addColorStop(0, 'rgba(255,153,68,'+(alpha)+')');
-          glow.addColorStop(0.5, 'rgba(255,204,102,'+(alpha*0.5)+')');
-          glow.addColorStop(1, 'rgba(255,153,68,0)');
-          ctx.fillStyle = glow;
+        
+        // Pulsujące koncentryczne pierścienie
+        for(var i=0; i<3; i++){
+          var radius = 50 + i*40 + (Date.now() % 2000) / 10;
+          var alpha = 0.3 - i*0.1 - ((Date.now() % 2000) / 2000) * 0.2;
+          ctx.strokeStyle = 'rgba(255,153,68,'+(alpha)+')';
+          ctx.lineWidth = 3 * DPR;
           ctx.beginPath();
-          ctx.arc(t.x, t.y, size, 0, Math.PI*2);
-          ctx.fill();
+          ctx.arc(mouseX, mouseY, radius * DPR, 0, Math.PI*2);
+          ctx.stroke();
         }
-        mouseTrail = mouseTrail.filter(function(t){ return t.life > 0; });
+        
+        // Odpychanie cząstek od kursora
+        particles.forEach(function(p){
+          var dx = p.x - mouseX;
+          var dy = p.y - mouseY;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 150*DPR && dist > 0){
+            var force = (150*DPR - dist) / (150*DPR);
+            p.vx += (dx/dist) * force * 0.3;
+            p.vy += (dy/dist) * force * 0.3;
+          }
+        });
       }
       
       if(theme === 'cyberpunk'){
@@ -102,24 +109,33 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       
       if(theme === 'mystery'){
-        // Mystery: Mgła/aura wokół kursora
+        // Mystery: Spiralne cząstki przyciągane do kursora
         ctx.globalCompositeOperation = 'lighter';
-        for(var i=0; i<mouseTrail.length; i++){
-          var t = mouseTrail[i];
-          t.life -= 0.03;
-          var alpha = t.life * 0.4;
-          var size = (1 - t.life) * 80 + 40;
-          
-          var glow = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, size);
-          glow.addColorStop(0, 'rgba(0,208,132,'+(alpha)+')');
-          glow.addColorStop(0.3, 'rgba(157,78,221,'+(alpha*0.6)+')');
-          glow.addColorStop(1, 'rgba(0,208,132,0)');
-          ctx.fillStyle = glow;
-          ctx.beginPath();
-          ctx.arc(t.x, t.y, size, 0, Math.PI*2);
-          ctx.fill();
-        }
-        mouseTrail = mouseTrail.filter(function(t){ return t.life > 0; });
+        
+        // Świecący okrąg wokół kursora
+        var glow = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 100*DPR);
+        glow.addColorStop(0, 'rgba(0,208,132,0.2)');
+        glow.addColorStop(0.5, 'rgba(157,78,221,0.15)');
+        glow.addColorStop(1, 'rgba(0,208,132,0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Przyciąganie cząstek do kursora ze spiralnym ruchem
+        particles.forEach(function(p){
+          var dx = mouseX - p.x;
+          var dy = mouseY - p.y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 200*DPR && dist > 20*DPR){
+            var force = (200*DPR - dist) / (200*DPR) * 0.15;
+            // Dodaj spiralny ruch
+            var angle = Math.atan2(dy, dx);
+            var perpAngle = angle + Math.PI/2;
+            p.vx += Math.cos(angle) * force + Math.cos(perpAngle) * force * 0.5;
+            p.vy += Math.sin(angle) * force + Math.sin(perpAngle) * force * 0.5;
+          }
+        });
       }
       
       ctx.globalCompositeOperation = 'source-over';
