@@ -11,10 +11,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var mouseTrail = [];
     var mouseX = 0, mouseY = 0;
     var clickRipples = [];
-    var mouseDown = false;
-    var tentacleFleeUntil = 0;
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
     var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
+    var lastClickTarget = { x: 0, y: 0, until: 0 };
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -49,20 +48,11 @@ document.addEventListener('DOMContentLoaded', function(){
       if(mouseTrail.length > 20) mouseTrail.shift();
     });
 
-    document.addEventListener('mousedown', function(){
-      mouseDown = true;
-      tentacleFleeUntil = performance.now() + 900;
-    });
-
-    document.addEventListener('mouseup', function(){
-      mouseDown = false;
-    });
-
     // Click-triggered sonar ripples
     document.addEventListener('click', function(e){
       clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
       if(clickRipples.length > 12) clickRipples.shift();
-      tentacleFleeUntil = performance.now() + 900;
+      lastClickTarget = { x: e.clientX * DPR, y: e.clientY * DPR, until: performance.now() + 1400 };
     });
 
     function drawMouseEffects(){
