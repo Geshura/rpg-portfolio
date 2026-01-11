@@ -42,61 +42,65 @@
 			<section data-section="inventory" class="card">
 				<h2>Ekwipunek</h2>
 
- 
-
-				<div class="pdf-controls">
-					<label>Sortuj według:
-						<select id="pdf-sort-field">
-							<option value="language">Język</option>
-							<option value="publisher">Wydawnictwo</option>
-							<option value="system">System</option>
-							<option value="title" selected>Tytuł</option>
-							<option value="date_sale">Data sprzedaży</option>
-							<option value="date_acquired">Data uzyskania</option>
-						</select>
-					</label>
-
-					<label>Porządek:
-						<select id="pdf-sort-order">
-							<option value="asc">Rosnąco (A→Z)</option>
-							<option value="desc">Malejąco (Z→A)</option>
-						</select>
-					</label>
-
-					<label>Wyszukaj:
-						<input id="pdf-search" placeholder="wyszukaj po tytule / wydawcy / systemie" />
-					</label>
-
-					<button id="pdf-refresh" class="action-btn">Odśwież listę</button>
-
-					<div id="pdf-filters" class="pdf-filters">
-						<div class="filter-row">
-							<div class="filter-group">
-								<strong>Języki:</strong>
-								<div id="filter-languages" class="filter-list"></div>
+				<div class="pdf-grid">
+					<aside class="pdf-sidebar">
+						<div id="pdf-filters" class="pdf-filters">
+							<div class="filter-row">
+								<div class="filter-group">
+									<strong>Języki:</strong>
+									<div id="filter-languages" class="filter-list"></div>
+								</div>
+								<div class="filter-group">
+									<strong>Wydawnictwa:</strong>
+									<div id="filter-publishers" class="filter-list"></div>
+								</div>
+								<div class="filter-group">
+									<strong>Systemy:</strong>
+									<div id="filter-systems" class="filter-list"></div>
+								</div>
 							</div>
-							<div class="filter-group">
-								<strong>Wydawnictwa:</strong>
-								<div id="filter-publishers" class="filter-list"></div>
-							</div>
-							<div class="filter-group">
-								<strong>Systemy:</strong>
-								<div id="filter-systems" class="filter-list"></div>
+
+							<div class="filter-row">
+								<div class="filter-group">
+									<strong>Posiadanie:</strong>
+									<button id="pdf-possession-toggle" class="action-btn" data-possession="all" aria-pressed="false">Filtr: Wszystkie</button>
+								</div>
 							</div>
 						</div>
+					</aside>
 
-						<div class="filter-row">
-							<div class="filter-group">
-								<strong>Posiadanie:</strong>
-								<button id="pdf-possession-toggle" class="action-btn" data-possession="all" aria-pressed="false">Filtr: Wszystkie</button>
-							</div>
+					<div class="pdf-main">
+						<div class="pdf-controls">
+							<label>Sortuj według:
+								<select id="pdf-sort-field">
+									<option value="language">Język</option>
+									<option value="publisher">Wydawnictwo</option>
+									<option value="system">System</option>
+									<option value="title" selected>Tytuł</option>
+									<option value="date_sale">Data sprzedaży</option>
+									<option value="date_acquired">Data uzyskania</option>
+								</select>
+							</label>
+
+							<label>Porządek:
+								<select id="pdf-sort-order">
+									<option value="asc">Rosnąco (A→Z)</option>
+									<option value="desc">Malejąco (Z→A)</option>
+								</select>
+							</label>
+
+							<label>Wyszukaj:
+								<input id="pdf-search" placeholder="wyszukaj po tytule / wydawcy / systemie" />
+							</label>
+
+							<button id="pdf-refresh" class="action-btn">Odśwież listę</button>
+						</div>
+
+						<div id="pdf-list-container" class="pdf-list" aria-live="polite">
+							<!-- tabela zostanie wygenerowana dynamicznie przez script.js -->
+							<p class="summary">Ładowanie listy...</p>
 						</div>
 					</div>
-				</div>
-
-				<div id="pdf-list-container" class="pdf-list" aria-live="polite">
-					<!-- tabela zostanie wygenerowana dynamicznie przez script.js -->
-					<p class="summary">Ładowanie listy...</p>
 				</div>
 			</section>
 
