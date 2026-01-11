@@ -1,506 +1,205 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Technomancer Portfolio — Post‑Apo Tech</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Post‑Apo frontend developer — restores sites, slays zombie processes and deploys survival‑grade interfaces.">
-  </head>
-  <body data-lang="en">
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Portfolio RPG — Post‑Apo Tech</title>
+		<link rel="stylesheet" href="styles.css">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+		<meta name="description" content="Portfolio RPG — rzeczy posiadane, poszukiwane, prace dla fandomu.">
+	</head>
+	<body data-theme="post-apo">
+		<canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <!-- English -->
-    <div class="lang lang-en">
-      <header class="hero">
-        <div class="wrap">
-          <nav class="lang-switch" aria-label="language switch">
-            <a href="#" data-lang="en" class="active">EN</a>
-            <a href="#" data-lang="pl">PL</a>
-          </nav>
-          <button id="fx-toggle" aria-pressed="false" title="Reduce visual effects">Reduce FX</button>
-          <h1 class="headline">I bring dead sites back to life — even when the Web is a Wasteland.</h1>
-          <p class="sub">ROLE: <strong>FRONTEND DEVELOPER / SITE CREATOR</strong> — I patch ruins with tape, tests and clean code. Main tools: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
-          <nav class="top-nav">
-            <a href="#about">About</a>
-            <a href="#inventory">Inventory</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <a class="cta" href="#contact">Send SOS — Recruit Engineer</a>
-        </div>
-      </header>
+		<header class="hero">
+			<div class="wrap">
+				<nav class="theme-switch" aria-label="przełącznik motywów">
+					<a href="#" data-theme="post-apo" class="active">Post‑Apo</a>
+					<a href="#" data-theme="cyberpunk">Cyberpunk</a>
+					<a href="#" data-theme="cthulhu">Cthulhu</a>
+				</nav>
 
-      <main class="content">
-        <section data-section="about" class="card">
-          <h2>About — Survivor's Log</h2>
-          <p>I survived the Internet Explorer wars and still ship components that don't explode. I code faster than corrosion spreads and debug with a Geiger counter when necessary. I hook APIs to hand‑cranked generators, optimize bundles, and exterminate zombie processes with a single well‑placed console.log.</p>
-          <p class="goal">Goal: Find steady work inside the Safe Zone — let's build something that survives the next Reset.</p>
-        </section>
+				<button id="fx-toggle" aria-pressed="false" title="Reduce visual effects">Reduce FX</button>
 
-        <section data-section="inventory" class="card">
-          <h2>Inventory — Gear & Skills</h2>
-          <ul class="gear">
-            <li><strong>JavaScript</strong> — Swiss army knife: sometimes cuts you, but gets the job done.</li>
-            <li><strong>React</strong> — Modular armor: components stack like plates; states are battle‑tested.</li>
-            <li><strong>CSS / SASS</strong> — Duct tape for interfaces: I restyle the ruins into something usable.</li>
-            <li><strong>WordPress</strong> — Fast shelter generator: quick to deploy, watch for mutated plugins.</li>
-            <li><strong>DevOps / CI</strong> — Backup generator: I automate builds and deliveries even on an unstable grid.</li>
-            <li><strong>Security</strong> — Geiger filter: I sniff leaks and patch backdoors before they spread.</li>
-          </ul>
-          <div class="stats">
-            <span>Speed: 8/10</span>
-            <span>Reliability: 9/10</span>
-            <span>Improvisation: 10/10</span>
-          </div>
-        </section>
+				<h1 class="headline">Portfolio RPG — survival, design, community</h1>
+				<p class="sub">Styl: <strong>Post‑Apo</strong>. Przełącz motyw, by zmienić atmosferę strony (Post‑Apo / Cyberpunk / Cthulhu).</p>
 
-        <section data-section="projects" class="card">
-          <h2>Quest Log — Recovered Artifacts</h2>
+				<nav class="top-nav">
+					<a href="#about">O mnie</a>
+					<a href="#inventory">Ekwipunek</a>
+					<a href="#fandom">Fandom</a>
+					<a href="#contact">Kontakt</a>
+				</nav>
+			</div>
+		</header>
 
-          <article class="project">
-            <h3>VaultUI</h3>
-            <p class="summary">Single‑page fortress UI with offline cache, auth and graceful degradation.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Legacy UI that crashed offline and leaked user sessions.</li>
-              <li><strong>Role:</strong> Frontend lead — rebuilt UI, added auth flow and cache strategy.</li>
-              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
-              <li><strong>Fix:</strong> Implemented SW caching (NetworkFirst/CacheFirst), centralized auth, and retry logic for flaky networks.</li>
-              <li><strong>Result:</strong> 85% fewer session errors, offline read mode, and faster perceived load.</li>
-            </ul>
-          </article>
+		<main class="content">
+			<section data-section="about" class="card">
+				<h2>O mnie</h2>
+				<p>Jestem twórcą i konserwatorem rozwiązań dla społeczności RPG — zajmuję się interfejsami, narzędziami i estetyką kampanii. Łączę praktyczne podejście (stabilność, dostępność) z mocnym klimatem wizualnym: post‑apo, cyberpunk i mrocznym Cthulhu.</p>
+				<p class="goal">Cel: współpraca z twórcami kampanii, zespołami fandomowymi i niezależnymi projektami — dostarczać narzędzia, które działają w każdych warunkach.</p>
+			</section>
 
-          <article class="project">
-            <h3>RadiantBlog</h3>
-            <p class="summary">Migration and hardening of a battered CMS into a manageable, secure WordPress shelter.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Outdated CMS with slow pages and unpatched plugins.</li>
-              <li><strong>Role:</strong> Fullstack solo — migration, cleanup, security hardening.</li>
-              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
-              <li><strong>Fix:</strong> Migrated content, locked down permissions, implemented cache & WAF rules.</li>
-              <li><strong>Result:</strong> 4x faster TTFB, automated backups, and reduced spam/attacks.</li>
-            </ul>
-          </article>
+			<section data-section="inventory" class="card">
+				<h2>Ekwipunek</h2>
 
-          <article class="project">
-            <h3>SupplyChain Map</h3>
-            <p class="summary">Realtime resource routing visualizer with resilience for flaky connections.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Data feeds drop often; map UI would hang and lose state.</li>
-              <li><strong>Role:</strong> Frontend & integration — crafted resilient realtime client.</li>
-              <li><strong>Tech:</strong> WebSockets, D3, React, local caching.</li>
-              <li><strong>Fix:</strong> Added reconnection/backoff, local buffering and eventual consistency UI hints.</li>
-              <li><strong>Result:</strong> Stable visualization under 30% packet loss and clearer operator alerts.</li>
-            </ul>
-          </article>
+				<div class="inventory-grid">
+					<div class="col owned">
+						<h3>Rzeczy posiadane</h3>
+						<ul class="gear">
+							<li><strong>Miecz Kodów</strong> — biblioteka snippetów i utility functions do walki z bugami.</li>
+							<li><strong>Zestaw Modułów</strong> — komponenty React i widgety do szybkiego składania interfejsów.</li>
+							<li><strong>Pakiet Graficzny</strong> — ikony, sprite'y i portrety gotowe do użycia w kampaniach.</li>
+							<li><strong>Mapa Zaopatrzenia</strong> — narzędzia do wizualizacji tras i zasobów.</li>
+						</ul>
+					</div>
 
-          <p class="note">Want these expanded into full case studies (tech, metrics, before/after screenshots)? I can write them up.</p>
-        </section>
+					<div class="col wanted">
+						<h3>Rzeczy poszukiwane</h3>
+						<ul class="wanted">
+							<li>[EN] GalefireRPG - Isometric Dungeon Designer - Cyberpunk Edition</li>
+							<li>[PL] Blade Runner - Zestaw Startowy</li>
+							<li>[PL] Bluebeard’s Bride - Podręcznik</li>
+							<li>[PL] Choose Cthulhu 2 - W Górach Szaleństwa</li>
+							<li>[PL] Choose Cthulhu 3 - Widmo nad Innsmouth</li>
+							<li>[PL] Choose Cthulhu 4 - Bezimienne miasto</li>
+							<li>[PL] Choose Cthulhu 5 - Zgroza w Dunwich</li>
+							<li>[PL] Choose Cthulhu 6 - Sny w Domu Wiedźmy</li>
+							<li>[PL] Choose Cthulhu 7 - Kolor z innego wszechświata</li>
+							<li>[PL] Choose Cthulhu 8 - Święto</li>
+							<li>[PL] Choose Cthulhu 9 - Szepczący w ciemności</li>
+							<li>[PL] Choose Cthulhu 10 - Nawiedziciel Mroku</li>
+							<li>[PL] Choose Cthulhu 11 - Coś na progu</li>
+							<li>[PL] Choose Cthulhu 12 - Cień spoza czasu</li>
+							<li>[PL] Cień Władcy Demonów - Oblicza Demona - ekran mg + 3 przygody startowe</li>
+							<li>[PL] Conan - Najemnik</li>
+							<li>[PL] Conan - Wspaniałe Królestwa - Oko sępa</li>
+							<li>[PL] Conan - Wspaniałe Królestwa - Wyspa eonów</li>
+							<li>[PL] Delta Green - Podręcznik Agenta</li>
+							<li>[PL] Delta Green - Przewodnik Oficera Prowadzącego</li>
+							<li>[PL] Diuna - Czas staje się wąskimi drzwiami - przygoda</li>
+							<li>[PL] Diuna - Przybycie na pustynię - przygoda</li>
+							<li>[PL] Fallout - Atomowa Zima</li>
+							<li>[PL] Jedyny Pierścień - Zestaw Startowy</li>
+							<li>[PL] Jedyny Pierścień - Śródziemie - tam i z powrotem</li>
+							<li>[PL] Łowca Porachunek - Narzędzia narratora</li>
+							<li>[PL] Mutant Rok Zerowy - Kompendium Strefy 1: Leże Saurian</li>
+							<li>[PL] Mutant Rok Zerowy - Kompendium Strefy 2: Martwy Błękit</li>
+							<li>[PL] Mutant Rok Zerowy - Zestaw Map i Żetonów</li>
+							<li>[PL] Never Going Home - Księga spaczonych bestii</li>
+							<li>[PL] Never Going Home - Księga szeptów</li>
+							<li>[PL] Omerta - Mafijna Gra Fabularna - Podręcznik</li>
+							<li>[PL] Opowieści Baśniomistrza - Sekrety Smokolochów</li>
+							<li>[PL] Opowieści Baśniomistrza - Tajemnice Dziwnolasu</li>
+							<li>[PL] Popsuty Kompas - Dziennik przygody</li>
+							<li>[PL] Popsuty Kompas - Gdybajki</li>
+							<li>[PL] Popsuty Kompas - Złoty Wiek</li>
+							<li>[PL] The Witcher - Księga Opowieści</li>
+							<li>[PL] Warhammer 40KRP - Wrath & Glory - Litanie zagubionych</li>
+							<li>[PL] Warhammer 40KRP - Wrath & Glory - Utajnione Akta</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Czempioni Ładu</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Ekran Mistrza Gry</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Pamiętna noc</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Schronienia w krainach</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Ulice Świetlistej Włóczni</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Zestaw Startowy</li>
+							<li>[PL] Warhammer Age of Sigmar - Soulbound - Ziemie dotknięte Fatum</li>
+							<li>[PL] Widmo nad Arkham - Gra paragrafowa</li>
+							<li>[PL] Władca Pierścieni 5ed - Podręcznik</li>
+							<li>[PL] Zaginięcie Alice - Silent Falls</li>
+							<li>[PL] Zew Cthulhu 7ed - Bezimienne Horrory</li>
+							<li>[PL] Zew Cthulhu 7ed - Horror W Tatrach</li>
+							<li>[PL] Zew Cthulhu 7ed - Podręcznik Badaczki</li>
+							<li>[PL] Zew Cthulhu 7ed - Zestaw Startowy</li>
+						</ul>
+						<p class="note">PS. Zrezygnowałem z powiększania bazy z względu ciągle rosnącej bazy i braku czasu na porządki tego.</p>
+						<p class="note">Szukam wyżej wymienionych pozycji, aby ocenić, czy spodobają się mojej grupie docelowej, z którą gram w RPG. Dla mnie ma to charakter wstępnej selekcji, mającej na celu oszczędzenie czasu, który i tak jest w RPG dość ograniczony. W przypadku standardowych zakupów RPG często zdarza się, że przedmioty zostają nabyte, lecz przez pewien czas tylko leżą i zbierają kurz na półce, a następnie ostatecznie zostają odsprzedane na rynku RPG.</p>
+						<p class="note">PS. Jeśli jakaś pozycja nie widnieje na liście, to najprawdopodobniej oznacza, że już ją posiadam lub znam sposób na jej zdobycie.</p>
+						<p class="note">Jeśli posiadasz coś z listy i szukasz czegoś innego, śmiało napisz do mnie - z pewnością się dogadamy.</p>
+						<p class="note">Wszystkie zamieszczone pliki na tym chomiku znajdują się tu w formie podglądowej.
+Należy je usunąć w ciągu 24 godzin od pobrania bądź zakupić je z oficjalnej dystrybucji. Wykorzystywanie ich w celach komercyjnych jest niezgodne z prawem.</p>
+						<p class="note">Pobierasz treści na własną odpowiedzialność. Właściciel tego konta na portalu zwolniony jest tym samym z jakiejkolwiek odpowiedzialności prawnej.</p>
+						<p class="note">Jeśli pobrana zawartość Ci się spodobała zakup ją! Wspieraj tym samym twórców, wydawców i dystrybutorów!</p>
+					</div>
+				</div>
+			</section>
 
-        <section data-section="contact" class="card contact">
-          <h2>Contact — Radio Terminal</h2>
-          <p>Got a failing site, a leaky API, or need a resilient front built from scrap? Broadcast your distress signal. I'll respond on channel 77.7 (or email, if your carrier pigeons are reliable).</p>
+			<section data-section="pdfs" class="card" id="pdf-library">
+				<h2>Biblioteka PDF</h2>
+				<p class="summary">Lista plików PDF z `rpg-pdfs.json`. Użyj kontrolki, aby posortować i wyszukać po wydawnictwie, systemie, tytule lub datach.</p>
 
-          <form class="radio" method="post">
-            <label>Operator / Base Name
-              <input name="name" placeholder="Your name or company" required>
-            </label>
-            <label>Signal (brief)
-              <input name="message" placeholder="What's broken?" required>
-            </label>
-            <label>Priority
-              <select name="priority">
-                <option>Normal</option>
-                <option>Emergency</option>
-                <option>Nuclear</option>
-              </select>
-            </label>
-            <button class="cta" type="submit">Transmit SOS</button>
-          </form>
+				<div class="pdf-controls">
+					<label>Sortuj według:
+						<select id="pdf-sort-field">
+							<option value="publisher">Wydawnictwo</option>
+							<option value="system">System</option>
+							<option value="title" selected>Tytuł</option>
+							<option value="date_sale">Data sprzedaży</option>
+							<option value="date_acquired">Data uzyskania</option>
+						</select>
+					</label>
 
-          <p class="alt">Prefer direct comms? Email: <a href="mailto:your@email.example">your@email.example</a></p>
-          <p class="radio-note">"Transmitting on 77.7 — if you hear static, it's probably me."</p>
-        </section>
-      </main>
+					<label>Porządek:
+						<select id="pdf-sort-order">
+							<option value="asc">Rosnąco (A→Z)</option>
+							<option value="desc">Malejąco (Z→A)</option>
+						</select>
+					</label>
 
-      <footer class="foot">
-        <div class="wrap">© Technomancer — replace placeholders with real ROLE/STACK/GOAL. Built for the next Reset.</div>
-      </footer>
-    </div>
+					<label>Wyszukaj:
+						<input id="pdf-search" placeholder="wyszukaj po tytule / wydawcy / systemie" />
+					</label>
 
-    <!-- Polish -->
-    <div class="lang lang-pl">
-      <header class="hero">
-        <div class="wrap">
-          <nav class="lang-switch" aria-label="przełącznik języka">
-            <a href="#" data-lang="en">EN</a>
-            <a href="#" data-lang="pl" class="active">PL</a>
-          </nav>
-          <h1 class="headline">Przywrócę Twój serwis do życia — nawet jeśli Internet to Pustkowie.</h1>
-          <p class="sub">ROLA: <strong>FRONTEND DEVELOPER / TWÓRCA STRON</strong> — łataję ruiny taśmą, testami i czystą logiką. Główne narzędzia: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
-          <nav class="top-nav">
-            <a href="#about">O mnie</a>
-            <a href="#inventory">Ekwipunek</a>
-            <a href="#projects">Misje</a>
-            <a href="#contact">Kontakt</a>
-          </nav>
-          <a class="cta" href="#contact">Nadaj sygnał SOS — Zrekrutuj Inżyniera</a>
-        </div>
-      </header>
+					<button id="pdf-refresh" class="action-btn">Odśwież listę</button>
+				</div>
 
-      <main class="content">
-        <section data-section="about" class="card">
-          <h2>O mnie — Dziennik Ocalałego</h2>
-          <p>Przetrwałem wojny z Internet Explorerem i nadal dostarczam komponenty, które nie wybuchają. Koduję szybciej niż postępuje korozja i debuguję licznikiem Geigera, gdy trzeba. Podłączam API do korb, optymalizuję bundle i eliminuję zombie‑procesy jedną linijką.</p>
-          <p class="goal">Cel: zdobyć stałe zlecenia w Bezpiecznej Strefie — zbudujmy coś, co przetrwa następny Reset.</p>
-        </section>
+				<div id="pdf-list-container" class="pdf-list" aria-live="polite">
+					<!-- tabela zostanie wygenerowana dynamicznie przez script.js -->
+					<p class="summary">Ładowanie listy...</p>
+				</div>
+			</section>
 
-        <section data-section="inventory" class="card">
-          <h2>Ekwipunek — Bronie i Umiejętności</h2>
-          <ul class="gear">
-            <li><strong>JavaScript</strong> — scyzoryk szwajcarski: czasem zdziera palce, ale zrobi wszystko.</li>
-            <li><strong>React</strong> — modułowa zbroja: składam komponenty jak płyty pancerza.</li>
-            <li><strong>CSS / SASS</strong> — taśma i lakier: zamaskuję rdzę layoutu.</li>
-            <li><strong>WordPress</strong> — szybki generator szałasu: stawia chatę błyskawicznie, ale uważaj na zmutowane wtyczki.</li>
-            <li><strong>DevOps / CI</strong> — agregat zapasowy: automatyzuję kompilacje i deploye nawet przy chwiejnej sieci.</li>
-            <li><strong>Bezpieczeństwo</strong> — filtr Geigera: wyłapuję wycieki i łataję backdoory zanim się rozsieją.</li>
-          </ul>
-          <div class="stats">
-            <span>Szybkość: 8/10</span>
-            <span>Solidność: 9/10</span>
-            <span>Improwizacja: 10/10</span>
-          </div>
-        </section>
+			<section data-section="fandom" class="card">
+				<h2>Rzeczy zrobione dla fandomu</h2>
+				<ul class="fandom-list">
+					<li><strong>Mod: Ruiny Atarax</strong> — interaktywny mod kampanii z mapami i questami.</li>
+					<li><strong>NPC Generator</strong> — narzędzie webowe tworzące postacie i portrety dla Mistrzów Gry.</li>
+					<li><strong>Pakiet grafik</strong> — zestaw ikon i portretów udostępniony społeczności.</li>
+					<li><strong>Wydarzenia</strong> — organizacja jamów i współpraca z twórcami.</li>
+				</ul>
+				<p class="note">Możliwość rozwoju: pełne case study (stack, metryki, zrzuty ekranowe) — powiedz, co chcesz rozwinąć.</p>
+			</section>
 
-        <section data-section="projects" class="card">
-          <h2>Quest Log — Odzyskane Artefakty</h2>
+			<section data-section="contact" class="card contact">
+				<h2>Kontakt</h2>
+				<p>Masz projekt, mod lub zasób do odrestaurowania? Nadaj sygnał — odpowiem z planem i wyceną.</p>
 
-          <article class="project">
-            <h3>VaultUI</h3>
-            <p class="summary">Forteca UI typu SPA z cache offline, auth i łagodnym degradowaniem.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Stary interfejs, który padał offline i tracił sesje użytkowników.</li>
-              <li><strong>Rola:</strong> Frontend lead — przebudowa UI, flow autoryzacji i strategia cache.</li>
-              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
-              <li><strong>Naprawa:</strong> SW (NetworkFirst/CacheFirst), centralizacja auth i retry logic.</li>
-              <li><strong>Efekt:</strong> 85% mniej błędów sesji, tryb offline i szybsze odczucie ładowania.</li>
-            </ul>
-          </article>
+				<form class="radio" method="post">
+					<label>Operator / Baza
+						<input name="name" placeholder="Twoje imię lub firma" required>
+					</label>
+					<label>Sygnał (krótko)
+						<input name="message" placeholder="Co potrzebujesz?" required>
+					</label>
+					<label>Priorytet
+						<select name="priority">
+							<option>Normalny</option>
+							<option>Alarmowy</option>
+							<option>Nuklearny</option>
+						</select>
+					</label>
+					<button class="cta" type="submit">Transmituj SOS</button>
+				</form>
 
-          <article class="project">
-            <h3>RadiantBlog</h3>
-            <p class="summary">Migracja i wzmocnienie CMS‑a do bezpiecznego WordPressa.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Przestarzały CMS, powolne strony i niezałatane wtyczki.</li>
-              <li><strong>Rola:</strong> Fullstack solo — migracja, cleanup, hardening.</li>
-              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
-              <li><strong>Naprawa:</strong> Migracja treści, blokada uprawnień, cache i reguły WAF.</li>
-              <li><strong>Efekt:</strong> 4x szybsze TTFB, automatyczne backupy i mniej spam/ataków.</li>
-            </ul>
-          </article>
+				<p class="alt">E‑mail: <a href="mailto:your@email.example">your@email.example</a></p>
+			</section>
+		</main>
 
-          <article class="project">
-            <h3>Mapa Zaopatrzenia</h3>
-            <p class="summary">Wizualizator tras zasobów w czasie rzeczywistym odporny na niestabilne łącza.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Feed danych często zrywał połączenie; UI się zawieszał.</li>
-              <li><strong>Rola:</strong> Frontend & integracja — odporny klient realtime.</li>
-              <li><strong>Tech:</strong> WebSockets, D3, React, lokalny cache.</li>
-              <li><strong>Naprawa:</strong> Reconnection/backoff, buforowanie lokalne i wskazania spójności.</li>
-              <li><strong>Efekt:</strong> Stabilna wizualizacja przy 30% utracie pakietów i lepsze alerty dla operatorów.</li>
-            </ul>
-          </article>
+		<footer class="foot">
+			<div class="wrap">© Twórca RPG — styl: Post‑Apo / Cyberpunk / Cthulhu.</div>
+		</footer>
 
-          <p class="note">Chcesz pełne case study? Rozwinę techniczne raporty z metrykami i kodem.</p>
-        </section>
-
-        <section data-section="contact" class="card contact">
-          <h2>Kontakt — Terminal Radiowy</h2>
-          <p>Masz awarię, wyciek danych albo potrzebujesz odpornego frontu z surowców? Nadaj sygnał ratunkowy. Odpowiem na kanale 77.7 (albo e‑mailem, jeśli Twoje gołębie pocztowe są sprawne).</p>
-
-          <form class="radio" method="post">
-            <label>Operator / Baza
-              <input name="name" placeholder="Twoje imię lub firma" required>
-            </label>
-            <label>Sygnał (krótko)
-              <input name="message" placeholder="Co padło?" required>
-            </label>
-            <label>Priorytet
-              <select name="priority">
-                <option>Normalny</option>
-                <option>Alarmowy</option>
-                <option>Nuklearny</option>
-              </select>
-            </label>
-            <button class="cta" type="submit">Transmituj SOS</button>
-          </form>
-
-          <p class="alt">Wolisz bezpośrednio? Mail: <a href="mailto:your@email.example">your@email.example</a></p>
-          <p class="radio-note">"Nadaję na 77.7 — jeśli usłyszysz trzaski, to prawdopodobnie ja."</p>
-        </section>
-      </main>
-
-      <footer class="foot">
-        <div class="wrap">© Technomanta — zamień placeholdery na rolę/stack/cel. Zbudowane na kolejny Reset.</div>
-      </footer>
-    </div>
-
-    <script src="script.js"></script>
-  </body>
+		<script src="script.js"></script>
+	</body>
 </html>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <!doctype html>
-  <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Technomancer Portfolio — Post‑Apo Tech</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Post‑Apo frontend developer — restores sites, slays zombie processes and deploys survival‑grade interfaces.">
-  </head>
-  <body data-lang="en">
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <div class="lang lang-en">
-      <header class="hero">
-        <div class="wrap">
-          <nav class="lang-switch" aria-label="language switch">
-            <a href="#" data-lang="en" class="active">EN</a>
-            <a href="#" data-lang="pl">PL</a>
-          </nav>
-          <button id="fx-toggle" aria-pressed="false" title="Reduce visual effects">Reduce FX</button>
-          <h1 class="headline">I bring dead sites back to life — even when the Web is a Wasteland.</h1>
-          <p class="sub">ROLE: <strong>FRONTEND DEVELOPER / SITE CREATOR</strong> — I patch ruins with tape, tests and clean code. Main tools: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
-          <nav class="top-nav">
-            <a href="#about">About</a>
-            <a href="#inventory">Inventory</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <a class="cta" href="#contact">Send SOS — Recruit Engineer</a>
-        </div>
-      </header>
-
-      <main class="content">
-        <section data-section="about" class="card">
-          <h2>About — Survivor's Log</h2>
-          <p>I survived the Internet Explorer wars and still ship components that don't explode. I code faster than corrosion spreads and debug with a Geiger counter when necessary. I hook APIs to hand‑cranked generators, optimize bundles, and exterminate zombie processes with a single well‑placed console.log.</p>
-          <p class="goal">Goal: Find steady work inside the Safe Zone — let's build something that survives the next Reset.</p>
-        </section>
-
-        <section data-section="inventory" class="card">
-          <h2>Inventory — Gear & Skills</h2>
-          <ul class="gear">
-            <li><strong>JavaScript</strong> — Swiss army knife: sometimes cuts you, but gets the job done.</li>
-            <li><strong>React</strong> — Modular armor: components stack like plates; states are battle‑tested.</li>
-            <li><strong>CSS / SASS</strong> — Duct tape for interfaces: I restyle the ruins into something usable.</li>
-            <li><strong>WordPress</strong> — Fast shelter generator: quick to deploy, watch for mutated plugins.</li>
-            <li><strong>DevOps / CI</strong> — Backup generator: I automate builds and deliveries even on an unstable grid.</li>
-            <li><strong>Security</strong> — Geiger filter: I sniff leaks and patch backdoors before they spread.</li>
-          </ul>
-          <div class="stats">
-            <span>Speed: 8/10</span>
-            <span>Reliability: 9/10</span>
-            <span>Improvisation: 10/10</span>
-          </div>
-        </section>
-
-        <section data-section="projects" class="card">
-          <h2>Quest Log — Recovered Artifacts</h2>
-
-          <article class="project">
-            <h3>VaultUI</h3>
-            <p class="summary">Single‑page fortress UI with offline cache, auth and graceful degradation.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Legacy UI that crashed offline and leaked user sessions.</li>
-              <li><strong>Role:</strong> Frontend lead — rebuilt UI, added auth flow and cache strategy.</li>
-              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
-              <li><strong>Fix:</strong> Implemented SW caching (NetworkFirst/CacheFirst), centralized auth, and retry logic for flaky networks.</li>
-              <li><strong>Result:</strong> 85% fewer session errors, offline read mode, and faster perceived load.</li>
-            </ul>
-          </article>
-
-          <article class="project">
-            <h3>RadiantBlog</h3>
-            <p class="summary">Migration and hardening of a battered CMS into a manageable, secure WordPress shelter.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Outdated CMS with slow pages and unpatched plugins.</li>
-              <li><strong>Role:</strong> Fullstack solo — migration, cleanup, security hardening.</li>
-              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
-              <li><strong>Fix:</strong> Migrated content, locked down permissions, implemented cache & WAF rules.</li>
-              <li><strong>Result:</strong> 4x faster TTFB, automated backups, and reduced spam/attacks.</li>
-            </ul>
-          </article>
-
-          <article class="project">
-            <h3>SupplyChain Map</h3>
-            <p class="summary">Realtime resource routing visualizer with resilience for flaky connections.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Data feeds drop often; map UI would hang and lose state.</li>
-              <li><strong>Role:</strong> Frontend & integration — crafted resilient realtime client.</li>
-              <li><strong>Tech:</strong> WebSockets, D3, React, local caching.</li>
-              <li><strong>Fix:</strong> Added reconnection/backoff, local buffering and eventual consistency UI hints.</li>
-              <li><strong>Result:</strong> Stable visualization under 30% packet loss and clearer operator alerts.</li>
-            </ul>
-          </article>
-
-          <p class="note">Want these expanded into full case studies (tech, metrics, before/after screenshots)? I can write them up.</p>
-        </section>
-
-        <section data-section="contact" class="card contact">
-          <h2>Contact — Radio Terminal</h2>
-          <p>Got a failing site, a leaky API, or need a resilient front built from scrap? Broadcast your distress signal. I'll respond on channel 77.7 (or email, if your carrier pigeons are reliable).</p>
-
-          <form class="radio" method="post">
-            <label>Operator / Base Name
-              <input name="name" placeholder="Your name or company" required>
-            </label>
-            <label>Signal (brief)
-              <input name="message" placeholder="What's broken?" required>
-            </label>
-            <label>Priority
-              <select name="priority">
-                <option>Normal</option>
-                <option>Emergency</option>
-                <option>Nuclear</option>
-              </select>
-            </label>
-            <button class="cta" type="submit">Transmit SOS</button>
-          </form>
-
-          <p class="alt">Prefer direct comms? Email: <a href="mailto:your@email.example">your@email.example</a></p>
-          <p class="radio-note">"Transmitting on 77.7 — if you hear static, it's probably me."</p>
-        </section>
-      </main>
-
-      <footer class="foot">
-        <div class="wrap">© Technomancer — replace placeholders with real ROLE/STACK/GOAL. Built for the next Reset.</div>
-      </footer>
-    </div>
-
-    <!-- Polish content embedded for SPA switching -->
-    <div class="lang lang-pl">
-      <header class="hero">
-        <div class="wrap">
-          <nav class="lang-switch" aria-label="przełącznik języka">
-            <a href="#" data-lang="en">EN</a>
-            <a href="#" data-lang="pl" class="active">PL</a>
-          </nav>
-          <h1 class="headline">Przywrócę Twój serwis do życia — nawet jeśli Internet to Pustkowie.</h1>
-          <p class="sub">ROLA: <strong>FRONTEND DEVELOPER / TWÓRCA STRON</strong> — łataję ruiny taśmą, testami i czystą logiką. Główne narzędzia: <em>TECH STACK: JAVASCRIPT, REACT, WORDPRESS, CSS</em>.</p>
-          <nav class="top-nav">
-            <a href="#about">O mnie</a>
-            <a href="#inventory">Ekwipunek</a>
-            <a href="#projects">Misje</a>
-            <a href="#contact">Kontakt</a>
-          </nav>
-          <a class="cta" href="#contact">Nadaj sygnał SOS — Zrekrutuj Inżyniera</a>
-        </div>
-      </header>
-
-      <main class="content">
-        <section data-section="about" class="card">
-          <h2>O mnie — Dziennik Ocalałego</h2>
-          <p>Przetrwałem wojny z Internet Explorerem i nadal dostarczam komponenty, które nie wybuchają. Koduję szybciej niż postępuje korozja i debuguję licznikiem Geigera, gdy trzeba. Podłączam API do korb, optymalizuję bundle i eliminuję zombie‑procesy jedną linijką.</p>
-          <p class="goal">Cel: zdobyć stałe zlecenia w Bezpiecznej Strefie — zbudujmy coś, co przetrwa następny Reset.</p>
-        </section>
-
-        <section data-section="inventory" class="card">
-          <h2>Ekwipunek — Bronie i Umiejętności</h2>
-          <ul class="gear">
-            <li><strong>JavaScript</strong> — scyzoryk szwajcarski: czasem zdziera palce, ale zrobi wszystko.</li>
-            <li><strong>React</strong> — modułowa zbroja: składam komponenty jak płyty pancerza.</li>
-            <li><strong>CSS / SASS</strong> — taśma i lakier: zamaskuję rdzę layoutu.</li>
-            <li><strong>WordPress</strong> — szybki generator szałasu: stawia chatę błyskawicznie, ale uważaj na zmutowane wtyczki.</li>
-            <li><strong>DevOps / CI</strong> — agregat zapasowy: automatyzuję kompilacje i deploye nawet przy chwiejnej sieci.</li>
-            <li><strong>Bezpieczeństwo</strong> — filtr Geigera: wyłapuję wycieki i łataję backdoory zanim się rozsieją.</li>
-          </ul>
-          <div class="stats">
-            <span>Szybkość: 8/10</span>
-            <span>Solidność: 9/10</span>
-            <span>Improwizacja: 10/10</span>
-          </div>
-        </section>
-
-        <section data-section="projects" class="card">
-          <h2>Quest Log — Odzyskane Artefakty</h2>
-
-          <article class="project">
-            <h3>VaultUI</h3>
-            <p class="summary">Forteca UI typu SPA z cache offline, auth i łagodnym degradowaniem.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Stary interfejs, który padał offline i tracił sesje użytkowników.</li>
-              <li><strong>Rola:</strong> Frontend lead — przebudowa UI, flow autoryzacji i strategia cache.</li>
-              <li><strong>Tech:</strong> React, Service Workers, IndexedDB, JWT.</li>
-              <li><strong>Naprawa:</strong> SW (NetworkFirst/CacheFirst), centralizacja auth i retry logic.</li>
-              <li><strong>Efekt:</strong> 85% mniej błędów sesji, tryb offline i szybsze odczucie ładowania.</li>
-            </ul>
-          </article>
-
-          <article class="project">
-            <h3>RadiantBlog</h3>
-            <p class="summary">Migracja i wzmocnienie CMS‑a do bezpiecznego WordPressa.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Przestarzały CMS, powolne strony i niezałatane wtyczki.</li>
-              <li><strong>Rola:</strong> Fullstack solo — migracja, cleanup, hardening.</li>
-              <li><strong>Tech:</strong> WordPress, PHP, Nginx, Cloudflare, WP‑CLI.</li>
-              <li><strong>Naprawa:</strong> Migracja treści, blokada uprawnień, cache i reguły WAF.</li>
-              <li><strong>Efekt:</strong> 4x szybsze TTFB, automatyczne backupy i mniej spam/ataków.</li>
-            </ul>
-          </article>
-
-          <article class="project">
-            <h3>Mapa Zaopatrzenia</h3>
-            <p class="summary">Wizualizator tras zasobów w czasie rzeczywistym odporny na niestabilne łącza.</p>
-            <ul class="case">
-              <li><strong>Problem:</strong> Feed danych często zrywał połączenie; UI się zawieszał.</li>
-              <li><strong>Rola:</strong> Frontend & integracja — odporny klient realtime.</li>
-              <li><strong>Tech:</strong> WebSockets, D3, React, lokalny cache.</li>
-              <li><strong>Naprawa:</strong> Reconnection/backoff, buforowanie lokalne i wskazania spójności.</li>
-              <li><strong>Efekt:</strong> Stabilna wizualizacja przy 30% utracie pakietów i lepsze alerty dla operatorów.</li>
-            </ul>
-          </article>
-
-          <p class="note">Chcesz pełne case study? Rozwinę techniczne raporty z metrykami i kodem.</p>
-        </section>
-
-        <section data-section="contact" class="card contact">
-          <h2>Kontakt — Terminal Radiowy</h2>
-          <p>Masz awarię, wyciek danych albo potrzebujesz odpornego frontu z surowców? Nadaj sygnał ratunkowy. Odpowiem na kanale 77.7 (albo e‑mailem, jeśli Twoje gołębie pocztowe są sprawne).</p>
-
-          <form class="radio" method="post">
-            <label>Operator / Baza
-              <input name="name" placeholder="Twoje imię lub firma" required>
-            </label>
-            <label>Sygnał (krótko)
-              <input name="message" placeholder="Co padło?" required>
-            </label>
-            <label>Priorytet
-              <select name="priority">
-                <option>Normalny</option>
-                <option>Alarmowy</option>
-                <option>Nuklearny</option>
-              </select>
-            </label>
-            <button class="cta" type="submit">Transmituj SOS</button>
-          </form>
-
-          <p class="alt">Wolisz bezpośrednio? Mail: <a href="mailto:your@email.example">your@email.example</a></p>
-          <p class="radio-note">"Nadaję na 77.7 — jeśli usłyszysz trzaski, to prawdopodobnie ja."</p>
-        </section>
-      </main>
-
-      <footer class="foot">
-        <div class="wrap">© Technomanta — zamień placeholdery na rolę/stack/cel. Zbudowane na kolejny Reset.</div>
-      </footer>
-    </div>
-
-    <script src="script.js"></script>
-  </body>
-  </html>
