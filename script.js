@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
     window.particlesEnabled = true;
     var mouseTrail = [];
     var mouseX = 0, mouseY = 0;
+    var lastMouseMove = 0;
     var clickRipples = [];
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
     var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function(){
       mouseY = e.clientY * DPR;
       mouseTrail.push({x: mouseX, y: mouseY, life: 1});
       if(mouseTrail.length > 20) mouseTrail.shift();
+      lastMouseMove = performance.now();
     });
 
     // Click-triggered sonar ripples
@@ -154,67 +156,74 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Macki w stylu Cthulhu (z off-screen rogów w stronę celu)
-        var tentacles = 10;
-        var now = Date.now() * 0.0016;
-        var targetActive = performance.now() < lastClickTarget.until;
-        var targetX = targetActive ? lastClickTarget.x : (mouseX || w*0.5);
-        var targetY = targetActive ? lastClickTarget.y : (mouseY || h*0.5);
-        var corners = [
-          {x: -220*DPR, y: -220*DPR},
-          {x: w + 220*DPR, y: -220*DPR},
-          {x: w + 220*DPR, y: h + 220*DPR},
-          {x: -220*DPR, y: h + 220*DPR}
-        ];
-        for(var ti=0; ti<tentacles; ti++){
-          var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
-          var segs = 7;
-          var anchor = tentacleAnchors[ti % tentacleAnchors.length];
-          var corner = corners[ti % corners.length];
-          var jitterOut = 140 * DPR;
-          var originX = corner.x + Math.cos(anchor.offset + now + anchor.phase) * jitterOut;
-          var originY = corner.y + Math.sin(anchor.offset + now*1.2 + anchor.phase) * jitterOut;
-          var dxTarget = targetX - originX;
-          var dyTarget = targetY - originY;
-          var baseLen = Math.sqrt(dxTarget*dxTarget + dyTarget*dyTarget);
-          var len = baseLen * 1.05 + 160 * DPR;
-          var aimAngle = Math.atan2(dyTarget, dxTarget);
-          ctx.strokeStyle = 'rgba(6,12,10,0.8)';
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.beginPath();
-          var prevX = originX;
-          var prevY = originY;
-          ctx.moveTo(prevX, prevY);
-          for(var s=1; s<=segs; s++){
-            var progress = s / segs;
-            var taper = 1 - progress*0.35;
-            ctx.lineWidth = (6.5 * taper) * DPR;
-            var wave = Math.sin(now * 3.4 + s*2.1 + tentacleSeeds[ti % tentacleSeeds.length]) * (44 + 28*s) * DPR;
-            var wave2 = Math.cos(now * 1.6 + s*1.1 + ti*0.7) * (22 + 12*s) * DPR;
-            var angle = aimAngle + baseAngle*0.05 + wave * 0.0043;
-            var px = originX + Math.cos(angle) * len * progress + wave2 * 0.55;
-            var py = originY + Math.sin(angle) * len * progress + wave * 0.22;
-            ctx.lineTo(px, py);
-            prevX = px; prevY = py;
-          }
-          ctx.stroke();
-          // Jasny rdzeń macki (grubszy, ale węższy niż obrys)
-          ctx.strokeStyle = 'rgba(0,208,132,0.42)';
-          ctx.lineWidth = 2.8 * DPR;
-          ctx.beginPath();
-          ctx.moveTo(originX, originY);
-          for(var s2=1; s2<=segs; s2++){
-            var progress2 = s2 / segs;
-            var waveA = Math.sin(now * 2.6 + s2*1.4 + ti) * (22 + 12*s2) * DPR;
-            var waveB = Math.cos(now * 3.1 + s2*1.8 + ti*0.6) * (18 + 10*s2) * DPR;
-            var angleA = aimAngle + baseAngle*0.04 + waveA * 0.0035;
-            var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.25;
-            var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.18;
-            ctx.lineTo(px2, py2);
-          }
-          ctx.stroke();
+        // Jedna macka: powolny, zygzakowaty patrol wokół ekranu; po kliknięciu sprint do celu, potem wraca do patrolu
+        var nowBase = Date.now() * 0.0010;
+        var clickActive = performance.now() < lastClickTarget.until;
+        var speedBoost = clickActive ? 1.8 : 0.55; // klik = sprint, idle = wolno
+
+        function patrolPoint(t){
+          var L = 2*(w + h);
+          var d = (t%1) * L;
+          if(d < w) return { x: d, y: -180*DPR, dir: 0 };
+          d -= w;
+          if(d < h) return { x: w + 180*DPR, y: d, dir: Math.PI/2 };
+          d -= h;
+          if(d < w) return { x: w - d, y: h + 180*DPR, dir: Math.PI };
+          d -= w;
+          return { x: -180*DPR, y: h - d, dir: -Math.PI/2 };
         }
+
+        var tPatrol = (performance.now() * 0.00005 * speedBoost) % 1; // bardzo wolny obieg
+        var p0 = patrolPoint(tPatrol);
+        var zig = Math.sin(nowBase * 2.1) * 140 * DPR;
+        var originX = p0.x + Math.cos(p0.dir + Math.PI/2) * (220*DPR + zig*0.35);
+        var originY = p0.y + Math.sin(p0.dir + Math.PI/2) * (220*DPR + zig*0.35);
+
+        var targetX = clickActive ? lastClickTarget.x : (p0.x + Math.cos(p0.dir) * 360 + Math.cos(nowBase*1.4) * zig * 0.45);
+        var targetY = clickActive ? lastClickTarget.y : (p0.y + Math.sin(p0.dir) * 360 + Math.sin(nowBase*1.2) * zig * 0.45);
+
+        var dxTarget = targetX - originX;
+        var dyTarget = targetY - originY;
+        var baseLen = Math.sqrt(dxTarget*dxTarget + dyTarget*dyTarget);
+        var len = baseLen + 260 * DPR;
+        var aimAngle = Math.atan2(dyTarget, dxTarget);
+
+        var segs = 8;
+        ctx.strokeStyle = 'rgba(6,12,10,0.8)';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        var prevX = originX;
+        var prevY = originY;
+        ctx.moveTo(prevX, prevY);
+        for(var s=1; s<=segs; s++){
+          var progress = s / segs;
+          var taper = 1 - progress*0.4;
+          ctx.lineWidth = (6.8 * taper) * DPR;
+          var wave = Math.sin(nowBase * (0.9 + 0.4*speedBoost) + s*1.8) * (38 + 26*s) * DPR;
+          var wave2 = Math.cos(nowBase * (0.8 + 0.5*speedBoost) + s*1.3) * (20 + 12*s) * DPR;
+          var angle = aimAngle + wave * 0.0034;
+          var px = originX + Math.cos(angle) * len * progress + wave2 * 0.42;
+          var py = originY + Math.sin(angle) * len * progress + wave * 0.18;
+          ctx.lineTo(px, py);
+          prevX = px; prevY = py;
+        }
+        ctx.stroke();
+        // Jasny rdzeń macki
+        ctx.strokeStyle = 'rgba(0,208,132,0.42)';
+        ctx.lineWidth = 2.8 * DPR;
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        for(var s2=1; s2<=segs; s2++){
+          var progress2 = s2 / segs;
+          var waveA = Math.sin(nowBase * (1.1 + 0.5*speedBoost) + s2*1.5) * (18 + 11*s2) * DPR;
+          var waveB = Math.cos(nowBase * (1.5 + 0.6*speedBoost) + s2*1.7) * (15 + 9*s2) * DPR;
+          var angleA = aimAngle + waveA * 0.0028;
+          var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.2;
+          var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.14;
+          ctx.lineTo(px2, py2);
+        }
+        ctx.stroke();
         
         // Przyciąganie cząstek do kursora ze spiralnym ruchem
         particles.forEach(function(p){
