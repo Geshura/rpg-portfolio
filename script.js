@@ -393,6 +393,9 @@ document.addEventListener('DOMContentLoaded', function(){
       html.push('</tbody></table>');
       container.innerHTML = html.join('');
 
+      // hide broken thumbnails
+      container.querySelectorAll('img.thumb').forEach(function(img){ img.onerror = function(){ this.style.display='none'; }; });
+
       // attach click handlers to header cells to enable sorting by column
       try{
         var ths = container.querySelectorAll('th.sortable');
@@ -421,7 +424,59 @@ document.addEventListener('DOMContentLoaded', function(){
       }catch(e){ /* ignore attach errors */ }
     }
 
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+    /* --- Filter UI build & handlers --- */
+    var possessionToggle = document.getElementById('pdf-possession-toggle');
+    var filterLangEl = document.getElementById('filter-languages');
+    var filterPubEl = document.getElementById('filter-publishers');
+    var filterSysEl = document.getElementById('filter-systems');
+
+    var selectedLanguages = new Set();
+    var selectedPublishers = new Set();
+    var selectedSystems = new Set();
+    var possessionFilter = 'all'; // all | have | want
+
+    function buildFilters(data){
+      if(!Array.isArray(data)) return;
+      var langs = new Set();
+      var pubs = new Set();
+      var syss = new Set();
+      data.forEach(function(it){ langs.add(safeGet(it.language)); pubs.add(safeGet(it.publisher)); syss.add(safeGet(it.system)); });
+
+      function renderSet(container, items, prefix, onChange){
+        if(!container) return;
+        var arr = Array.from(items).filter(Boolean).sort(function(a,b){ return a.localeCompare(b,'pl',{sensitivity:'base'}); });
+        container.innerHTML = arr.map(function(v,i){
+          var id = prefix+'-'+i;
+          return '<label class="chk"><input type="checkbox" id="'+id+'" data-value="'+escapeHtml(v)+'"> '+escapeHtml(v)+'</label>';
+        }).join('');
+        container.querySelectorAll('input[type="checkbox"]').forEach(function(cb){ cb.addEventListener('change', onChange); });
+      }
+
+      renderSet(filterLangEl, langs, 'lang', function(){
+        selectedLanguages = new Set(Array.from(filterLangEl.querySelectorAll('input:checked')).map(function(i){ return i.getAttribute('data-value'); }));
+        applyFiltersAndSort();
+      });
+      renderSet(filterPubEl, pubs, 'pub', function(){
+        selectedPublishers = new Set(Array.from(filterPubEl.querySelectorAll('input:checked')).map(function(i){ return i.getAttribute('data-value'); }));
+        applyFiltersAndSort();
+      });
+      renderSet(filterSysEl, syss, 'sys', function(){
+        selectedSystems = new Set(Array.from(filterSysEl.querySelectorAll('input:checked')).map(function(i){ return i.getAttribute('data-value'); }));
+        applyFiltersAndSort();
+      });
+    }
+
+    if(possessionToggle){
+      possessionToggle.addEventListener('click', function(){
+        // cycle: all -> have -> want -> all
+        if(possessionFilter === 'all'){ possessionFilter = 'have'; possessionToggle.textContent = 'Filtr: Posiadane'; possessionToggle.setAttribute('aria-pressed','true'); }
+        else if(possessionFilter === 'have'){ possessionFilter = 'want'; possessionToggle.textContent = 'Filtr: Poszukiwane'; possessionToggle.setAttribute('aria-pressed','true'); }
+        else { possessionFilter = 'all'; possessionToggle.textContent = 'Filtr: Wszystkie'; possessionToggle.setAttribute('aria-pressed','false'); }
+        applyFiltersAndSort();
+      });
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 
     function applyFiltersAndSort(){
       var q = (searchEl && searchEl.value) ? searchEl.value.trim().toLowerCase() : '';
@@ -430,9 +485,21 @@ document.addEventListener('DOMContentLoaded', function(){
       // persist preference
       try{ localStorage.setItem('pdfSort', JSON.stringify({field: field, order: order})); }catch(e){}
       var filtered = pdfData.filter(function(it){
-        if(!q) return true;
-        var aggregated = [safeGet(it.publisher), safeGet(it.system), safeGet(it.title)].join(' ').toLowerCase();
-        return aggregated.indexOf(q) !== -1;
+        // search text
+        if(q){
+          var aggregated = [safeGet(it.publisher), safeGet(it.system), safeGet(it.title)].join(' ').toLowerCase();
+          if(aggregated.indexOf(q) === -1) return false;
+        }
+        // language filter
+        if(selectedLanguages.size > 0){ if(!selectedLanguages.has(safeGet(it.language))) return false; }
+        // publisher filter
+        if(selectedPublishers.size > 0){ if(!selectedPublishers.has(safeGet(it.publisher))) return false; }
+        // system filter
+        if(selectedSystems.size > 0){ if(!selectedSystems.has(safeGet(it.system))) return false; }
+        // possession filter: treat 'have' when date_acquired is non-empty
+        if(possessionFilter === 'have'){ if(!String(safeGet(it.date_acquired)).trim()) return false; }
+        if(possessionFilter === 'want'){ if(String(safeGet(it.date_acquired)).trim()) return false; }
+        return true;
       });
       filtered.sort(function(a,b){
         var cmp = compareValues(a,b,field);
@@ -446,6 +513,8 @@ document.addEventListener('DOMContentLoaded', function(){
       container.innerHTML = '<p class="summary">Ładowanie listy...</p>';
       fetch('rpg-pdfs.json').then(function(resp){ if(!resp.ok) throw new Error('HTTP '+resp.status); return resp.json(); }).then(function(data){
         pdfData = Array.isArray(data) ? data : (data.items || []);
+        // build dynamic filters from loaded data
+        try{ buildFilters(pdfData); }catch(e){}
         // restore saved sort preference if present
         try{
           var saved = JSON.parse(localStorage.getItem('pdfSort')||'{}');
