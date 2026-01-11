@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function(){
       canvas.style.width = window.innerWidth + 'px';
       canvas.style.height = window.innerHeight + 'px';
       initParticles();
-      resetTentacle('drift');
     }
 
     function rand(min,max){return Math.random()*(max-min)+min}
@@ -42,17 +41,6 @@ document.addEventListener('DOMContentLoaded', function(){
           life: rand(0,1)
         });
       }
-    }
-
-    function resetTentacle(mode, tx, ty){
-      tentacleState.mode = mode;
-      tentacleState.phase = Math.random()*Math.PI*2;
-      var pos = infinityPath(tentacleState.phase);
-      tentacleState.x = pos.x;
-      tentacleState.y = pos.y;
-      tentacleState.targetX = typeof tx === 'number' ? tx : 0;
-      tentacleState.targetY = typeof ty === 'number' ? ty : 0;
-      tentacleState.last = performance.now();
     }
 
     function infinityPath(t){
