@@ -157,17 +157,18 @@ document.addEventListener('DOMContentLoaded', function(){
       
       if(theme === 'mystery'){
         // Gwiazda Cthulhu z jednym olbrzymim okiem
+        ctx.globalCompositeOperation = 'source-over';
         var nowMs = performance.now();
         var tBase = nowMs * 0.00105;
         orbPhase += 0.0014 * (Date.now() - (window.__lastOrbTime||Date.now()));
         window.__lastOrbTime = Date.now();
 
         var centerX = w*0.5, centerY = h*0.5;
-        var starPoints = 7;  // heptagram - tajemnicza gwiazda
+        var starPoints = 7;  // heptagram
         var starRadius = 450*DPR;
         var innerRadius = 200*DPR;
 
-        // Rysuj pentagram/heptagram
+        // Współrzędne gwiazdy
         var starX = [], starY = [];
         for(var sp=0; sp<starPoints*2; sp++){
           var angle = (sp / (starPoints*2)) * Math.PI*2 - Math.PI/2;
@@ -177,19 +178,8 @@ document.addEventListener('DOMContentLoaded', function(){
           starY[sp] = centerY + Math.sin(angle) * (radius + wobble);
         }
 
-        // Zewnętrzne światło gwiazdy
-        ctx.globalCompositeOperation = 'screen';
-        var starGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, starRadius*1.5);
-        starGlow.addColorStop(0, 'rgba(157,78,221,0.35)');
-        starGlow.addColorStop(0.5, 'rgba(0,208,132,0.25)');
-        starGlow.addColorStop(1, 'rgba(0,255,209,0)');
-        ctx.fillStyle = starGlow;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, starRadius*1.5, 0, Math.PI*2);
-        ctx.fill();
-
-        // Gwiazda - zewnętrzna krawędź (ciemna)
-        ctx.strokeStyle = 'rgba(6,12,10,0.9)';
+        // Gwiazda - granice
+        ctx.strokeStyle = 'rgba(0,255,209,0.95)';
         ctx.lineWidth = 48*DPR;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -201,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.closePath();
         ctx.stroke();
 
-        // Gwiazda - wewnętrzne światło
-        ctx.strokeStyle = 'rgba(0,208,132,0.5)';
+        // Gwiazda - wewnętrzny blask
+        ctx.strokeStyle = 'rgba(157,78,221,0.7)';
         ctx.lineWidth = 20*DPR;
         ctx.beginPath();
         ctx.moveTo(starX[0], starY[0]);
@@ -213,10 +203,10 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.stroke();
 
         // Wypełnienie gwiazdy
-        var starFill = ctx.createRadialGradient(centerX, centerY, innerRadius*0.3, centerX, centerY, starRadius);
-        starFill.addColorStop(0, 'rgba(6,12,10,0.7)');
-        starFill.addColorStop(0.7, 'rgba(15,25,23,0.5)');
-        starFill.addColorStop(1, 'rgba(6,12,10,0.2)');
+        var starFill = ctx.createLinearGradient(centerX-starRadius, centerY-starRadius, centerX+starRadius, centerY+starRadius);
+        starFill.addColorStop(0, 'rgba(157,78,221,0.3)');
+        starFill.addColorStop(0.5, 'rgba(30,20,50,0.5)');
+        starFill.addColorStop(1, 'rgba(0,208,132,0.2)');
         ctx.fillStyle = starFill;
         ctx.beginPath();
         ctx.moveTo(starX[0], starY[0]);
@@ -226,38 +216,37 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.closePath();
         ctx.fill();
 
-        // OLBRZYMIE OKO CTHULHU w centrum
+        // OLBRZYMIE OKO w centrum
         
-        // Oculo halo - wszechogarniające światło
-        var eyeHalo = ctx.createRadialGradient(centerX, centerY, 80*DPR, centerX, centerY, 320*DPR);
-        eyeHalo.addColorStop(0, 'rgba(0,255,209,0.5)');
-        eyeHalo.addColorStop(0.3, 'rgba(157,78,221,0.3)');
-        eyeHalo.addColorStop(1, 'rgba(0,208,132,0)');
+        // Halo oka
+        var eyeHalo = ctx.createRadialGradient(centerX, centerY, 100*DPR, centerX, centerY, 320*DPR);
+        eyeHalo.addColorStop(0, 'rgba(0,255,209,0.4)');
+        eyeHalo.addColorStop(0.5, 'rgba(157,78,221,0.2)');
+        eyeHalo.addColorStop(1, 'rgba(100,50,150,0)');
         ctx.fillStyle = eyeHalo;
         ctx.beginPath();
         ctx.arc(centerX, centerY, 320*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Białko oka - ogromne
-        ctx.fillStyle = 'rgba(200,180,220,0.9)';
+        // Białko oka
+        ctx.fillStyle = 'rgba(230,220,240,0.95)';
         ctx.beginPath();
         ctx.arc(centerX, centerY, 130*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Tęczówka - magiczna fioletowa z gradientem
-        var iris = ctx.createRadialGradient(centerX, centerY, 40*DPR, centerX, centerY, 120*DPR);
-        iris.addColorStop(0, 'rgba(200,100,220,0.95)');
-        iris.addColorStop(0.4, 'rgba(150,50,200,0.85)');
-        iris.addColorStop(0.8, 'rgba(100,30,150,0.7)');
-        iris.addColorStop(1, 'rgba(50,10,100,0.5)');
+        // Tęczówka
+        var iris = ctx.createRadialGradient(centerX, centerY, 30*DPR, centerX, centerY, 120*DPR);
+        iris.addColorStop(0, 'rgba(220,100,255,0.9)');
+        iris.addColorStop(0.5, 'rgba(150,50,200,0.8)');
+        iris.addColorStop(1, 'rgba(80,20,120,0.6)');
         ctx.fillStyle = iris;
         ctx.beginPath();
         ctx.arc(centerX, centerY, 120*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Detale tęczówki - spiralne linie
-        ctx.strokeStyle = 'rgba(180,80,210,0.4)';
-        ctx.lineWidth = 2*DPR;
+        // Detale tęczówki
+        ctx.strokeStyle = 'rgba(200,80,230,0.5)';
+        ctx.lineWidth = 3*DPR;
         for(var iline=0; iline<8; iline++){
           var lAngle = (iline/8)*Math.PI*2;
           var lx1 = centerX + Math.cos(lAngle)*50*DPR;
@@ -270,89 +259,74 @@ document.addEventListener('DOMContentLoaded', function(){
           ctx.stroke();
         }
 
-        // Źrenica - GIGANTYCZNA i ruchoma
+        // Źrenica ruchoma
         var pupilDx = mouseX - centerX;
         var pupilDy = mouseY - centerY;
         var pupilAngle = Math.atan2(pupilDy, pupilDx);
-        var pupilOffset = 35*DPR;  // duży offset
+        var pupilOffset = 35*DPR;
         var pupilX = centerX + Math.cos(pupilAngle) * pupilOffset;
         var pupilY = centerY + Math.sin(pupilAngle) * pupilOffset;
 
-        // Zewnętrzna źrenica - czarna otoczka
-        ctx.fillStyle = 'rgba(10,5,20,0.98)';
+        // Czarna źrenica
+        ctx.fillStyle = 'rgba(0,0,0,0.98)';
         ctx.beginPath();
         ctx.arc(pupilX, pupilY, 65*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Główna źrenica - czarna
+        // Glębia źrenicy
         ctx.fillStyle = 'rgba(0,0,0,0.95)';
         ctx.beginPath();
         ctx.arc(pupilX, pupilY, 50*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Lustrzane odbicia na źrenicy - DUŻE
-        // Lewe-górne
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        // Błyski
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
         ctx.beginPath();
         ctx.arc(pupilX - 15*DPR, pupilY - 20*DPR, 18*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Prawe-dolne (mniejsze)
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
         ctx.beginPath();
         ctx.arc(pupilX + 12*DPR, pupilY + 15*DPR, 10*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Wewnętrzne światło źrenicy
-        var pupilLight = ctx.createRadialGradient(pupilX-12*DPR, pupilY-15*DPR, 2*DPR, pupilX, pupilY, 40*DPR);
-        pupilLight.addColorStop(0, 'rgba(200,150,255,0.4)');
-        pupilLight.addColorStop(1, 'rgba(100,50,150,0)');
-        ctx.fillStyle = pupilLight;
-        ctx.beginPath();
-        ctx.arc(pupilX, pupilY, 45*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Maleńkie oczy-satelity na końcach ramion gwiazdy
+        // Maleńkie oczy na ramionach gwiazdy
         for(var star=0; star<starPoints; star++){
           var stAngle = (-Math.PI/2) + (star/starPoints)*Math.PI*2;
           var stX = centerX + Math.cos(stAngle) * starRadius;
           var stY = centerY + Math.sin(stAngle) * starRadius;
-
-          // Migoczące małe oczy
           var pulse = Math.sin(tBase*1.5 + star)*0.5 + 0.5;
           
-          ctx.fillStyle = 'rgba(240,240,200,' + (0.6*pulse) + ')';
+          ctx.fillStyle = 'rgba(200,200,100,' + (0.8*pulse) + ')';
           ctx.beginPath();
           ctx.arc(stX, stY, 12*DPR, 0, Math.PI*2);
           ctx.fill();
 
-          // Źrenica mała
           var smallPupilDx = mouseX - stX;
           var smallPupilDy = mouseY - stY;
           var smallPupilAngle = Math.atan2(smallPupilDy, smallPupilDx);
           var smallPupilX = stX + Math.cos(smallPupilAngle)*4*DPR;
           var smallPupilY = stY + Math.sin(smallPupilAngle)*4*DPR;
 
-          ctx.fillStyle = 'rgba(0,0,0,0.9)';
+          ctx.fillStyle = 'rgba(0,0,0,0.95)';
           ctx.beginPath();
           ctx.arc(smallPupilX, smallPupilY, 5*DPR, 0, Math.PI*2);
           ctx.fill();
         }
 
-        // Promienie z centralnego oka na kliknięcia
+        // Promienie z kliknięcia
         for(var b=beamShots.length-1; b>=0; b--){
           var shot = beamShots[b];
           var age = nowMs - shot.start;
           var dur = 1200;
           if(age > dur){ beamShots.splice(b,1); continue; }
           var prog = age/dur;
-          var alphaB = Math.max(0, 0.7 * (1-prog));
+          var alphaB = Math.max(0, 0.8 * (1-prog));
           
-          // Główny promień
           var gradB = ctx.createLinearGradient(centerX, centerY, shot.x, shot.y);
-          gradB.addColorStop(0, 'rgba(200,100,220,'+alphaB+')');
-          gradB.addColorStop(0.5, 'rgba(0,255,209,'+alphaB*0.8+')');
-          gradB.addColorStop(1, 'rgba(157,78,221,'+(alphaB*0.5)+')');
+          gradB.addColorStop(0, 'rgba(200,100,255,'+alphaB+')');
+          gradB.addColorStop(0.5, 'rgba(0,255,209,'+alphaB+')');
+          gradB.addColorStop(1, 'rgba(157,78,221,'+(alphaB*0.6)+')');
           ctx.strokeStyle = gradB;
           ctx.lineWidth = 12 * DPR;
           ctx.lineCap = 'round';
@@ -361,26 +335,23 @@ document.addEventListener('DOMContentLoaded', function(){
           ctx.lineTo(shot.x, shot.y);
           ctx.stroke();
 
-          // Otoczka promienia
-          ctx.strokeStyle = 'rgba(0,255,209,'+(alphaB*0.4)+')';
+          ctx.strokeStyle = 'rgba(0,255,209,'+(alphaB*0.5)+')';
           ctx.lineWidth = 25*DPR;
           ctx.beginPath();
           ctx.moveTo(centerX, centerY);
           ctx.lineTo(shot.x, shot.y);
           ctx.stroke();
 
-          // Impact burst na celu - OLBRZYMI
           var burstR = 80*DPR + prog*180*DPR;
           var burst = ctx.createRadialGradient(shot.x, shot.y, 0, shot.x, shot.y, burstR);
-          burst.addColorStop(0, 'rgba(200,100,220,'+(alphaB*0.8)+')');
-          burst.addColorStop(0.4, 'rgba(0,255,209,'+(alphaB*0.5)+')');
+          burst.addColorStop(0, 'rgba(200,100,255,'+(alphaB*0.9)+')');
+          burst.addColorStop(0.4, 'rgba(0,255,209,'+(alphaB*0.6)+')');
           burst.addColorStop(1, 'rgba(157,78,221,0)');
           ctx.fillStyle = burst;
           ctx.beginPath();
           ctx.arc(shot.x, shot.y, burstR, 0, Math.PI*2);
           ctx.fill();
 
-          // Drżące pomieniiste fale od wybuchu
           for(var w=0; w<4; w++){
             var waveR = 100*DPR + (prog+w*0.1)*120*DPR;
             var waveAlpha = Math.max(0, alphaB * (1-((prog+w*0.1)*1.2)));
