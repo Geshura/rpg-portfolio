@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var mouseTrail = [];
     var mouseX = 0, mouseY = 0;
     var clickRipples = [];
+    var mouseDown = false;
+    var tentacleFleeUntil = 0;
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
     var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
 
@@ -47,10 +49,20 @@ document.addEventListener('DOMContentLoaded', function(){
       if(mouseTrail.length > 20) mouseTrail.shift();
     });
 
+    document.addEventListener('mousedown', function(){
+      mouseDown = true;
+      tentacleFleeUntil = performance.now() + 900;
+    });
+
+    document.addEventListener('mouseup', function(){
+      mouseDown = false;
+    });
+
     // Click-triggered sonar ripples
     document.addEventListener('click', function(e){
       clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
       if(clickRipples.length > 12) clickRipples.shift();
+      tentacleFleeUntil = performance.now() + 900;
     });
 
     function drawMouseEffects(){
@@ -157,11 +169,13 @@ document.addEventListener('DOMContentLoaded', function(){
         var now = Date.now() * 0.0016;
         for(var ti=0; ti<tentacles; ti++){
           var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
-          var len = (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
+          var fleeActive = mouseDown || (performance.now() < tentacleFleeUntil);
+          var screenSpan = Math.max(w, h);
+          var len = fleeActive ? (screenSpan * 0.8 + 220 * DPR) : (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
           var segs = 7;
           var anchor = tentacleAnchors[ti % tentacleAnchors.length];
-          var originRadius = (180 + 160 * Math.sin(now*0.55 + anchor.phase)) * DPR;
-          var jitter = (90 + 70 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR;
+          var originRadius = fleeActive ? (screenSpan * 0.9 + 260 * DPR) : (180 + 160 * Math.sin(now*0.55 + anchor.phase)) * DPR;
+          var jitter = fleeActive ? (240 + 140 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR : (90 + 70 * Math.sin(now*1.2 + anchor.phase*1.7)) * DPR;
           var originAngle = baseAngle + anchor.offset + Math.sin(now*0.7 + anchor.phase) * 1.1;
           var originX = mouseX + Math.cos(originAngle) * (originRadius + jitter);
           var originY = mouseY + Math.sin(originAngle) * (originRadius + jitter);
@@ -187,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function(){
           ctx.stroke();
           // Jasny rdzeń macki (grubszy, ale węższy niż obrys)
           ctx.strokeStyle = 'rgba(0,208,132,0.42)';
-          ctx.lineWidth = 2.4 * DPR;
+          ctx.lineWidth = 2.8 * DPR;
           ctx.beginPath();
           ctx.moveTo(originX, originY);
           for(var s2=1; s2<=segs; s2++){
