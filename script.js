@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
     var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
     var lastClickTarget = { x: 0, y: 0, until: 0 };
+    var orbPhase = 0;
+    var beamShots = [];
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function(){
       canvas.style.width = window.innerWidth + 'px';
       canvas.style.height = window.innerHeight + 'px';
       initParticles();
+      resetTentacle('drift');
     }
 
     function rand(min,max){return Math.random()*(max-min)+min}
@@ -41,6 +44,26 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }
 
+    function resetTentacle(mode, tx, ty){
+      tentacleState.mode = mode;
+      tentacleState.phase = Math.random()*Math.PI*2;
+      var pos = infinityPath(tentacleState.phase);
+      tentacleState.x = pos.x;
+      tentacleState.y = pos.y;
+      tentacleState.targetX = typeof tx === 'number' ? tx : 0;
+      tentacleState.targetY = typeof ty === 'number' ? ty : 0;
+      tentacleState.last = performance.now();
+    }
+
+    function infinityPath(t){
+      var a = Math.min(w,h) * 0.32;
+      var cx = w*0.5, cy = h*0.5;
+      return {
+        x: cx + a * Math.sin(t),
+        y: cy + a * Math.sin(t) * Math.cos(t)
+      };
+    }
+
     // Mouse tracking
     document.addEventListener('mousemove', function(e){
       mouseX = e.clientX * DPR;
@@ -55,6 +78,10 @@ document.addEventListener('DOMContentLoaded', function(){
       clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
       if(clickRipples.length > 12) clickRipples.shift();
       lastClickTarget = { x: e.clientX * DPR, y: e.clientY * DPR, until: performance.now() + 1400 };
+      tentacleState.mode = 'pounce';
+      tentacleState.targetX = lastClickTarget.x;
+      tentacleState.targetY = lastClickTarget.y;
+      tentacleState.last = performance.now();
     });
 
     function drawMouseEffects(){
@@ -156,40 +183,41 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Jedna macka: powolny, zygzakowaty patrol wokół ekranu; po kliknięciu sprint do celu, potem wraca do patrolu
+        // Jedna macka: krzywa nieskończoności (∞) + subtelny jitter; klik = skok do celu
         var nowBase = Date.now() * 0.0010;
-        var clickActive = performance.now() < lastClickTarget.until;
-        var speedBoost = clickActive ? 1.8 : 0.55; // klik = sprint, idle = wolno
+        var nowMs = performance.now();
+        var dt = Math.min(50, nowMs - (tentacleState.last || nowMs));
+        tentacleState.last = nowMs;
 
-        function patrolPoint(t){
-          var L = 2*(w + h);
-          var d = (t%1) * L;
-          if(d < w) return { x: d, y: -180*DPR, dir: 0 };
-          d -= w;
-          if(d < h) return { x: w + 180*DPR, y: d, dir: Math.PI/2 };
-          d -= h;
-          if(d < w) return { x: w - d, y: h + 180*DPR, dir: Math.PI };
-          d -= w;
-          return { x: -180*DPR, y: h - d, dir: -Math.PI/2 };
+        var clickActive = performance.now() < lastClickTarget.until;
+        if(clickActive){
+          tentacleState.mode = 'pounce';
+          tentacleState.targetX = lastClickTarget.x;
+          tentacleState.targetY = lastClickTarget.y;
+        } else if(tentacleState.mode === 'pounce' && performance.now() >= lastClickTarget.until){
+          tentacleState.mode = 'drift';
         }
 
-        var tPatrol = (performance.now() * 0.00005 * speedBoost) % 1; // bardzo wolny obieg
-        var p0 = patrolPoint(tPatrol);
-        var zig = Math.sin(nowBase * 2.1) * 140 * DPR;
-        var originX = p0.x + Math.cos(p0.dir + Math.PI/2) * (220*DPR + zig*0.35);
-        var originY = p0.y + Math.sin(p0.dir + Math.PI/2) * (220*DPR + zig*0.35);
+        var phaseSpeed = tentacleState.mode === 'pounce' ? 0.0022 : 0.0012;
+        tentacleState.phase += dt * phaseSpeed;
 
-        var targetX = clickActive ? lastClickTarget.x : (p0.x + Math.cos(p0.dir) * 360 + Math.cos(nowBase*1.4) * zig * 0.45);
-        var targetY = clickActive ? lastClickTarget.y : (p0.y + Math.sin(p0.dir) * 360 + Math.sin(nowBase*1.2) * zig * 0.45);
+        var basePos = infinityPath(tentacleState.phase);
+        var jitterAmp = 46 * DPR;
+        var jitter = Math.sin(nowBase * 1.7 + tentacleState.phase) * jitterAmp;
+        var originX = basePos.x + Math.cos(tentacleState.phase*1.4) * jitter;
+        var originY = basePos.y + Math.sin(tentacleState.phase*1.1) * jitter;
+
+        var targetX = tentacleState.mode === 'pounce' ? tentacleState.targetX : basePos.x + Math.cos(tentacleState.phase) * 180;
+        var targetY = tentacleState.mode === 'pounce' ? tentacleState.targetY : basePos.y + Math.sin(tentacleState.phase*1.2) * 160;
 
         var dxTarget = targetX - originX;
         var dyTarget = targetY - originY;
-        var baseLen = Math.sqrt(dxTarget*dxTarget + dyTarget*dyTarget);
-        var len = baseLen + 260 * DPR;
         var aimAngle = Math.atan2(dyTarget, dxTarget);
+        var baseLen = tentacleState.mode === 'pounce' ? 460 * DPR : 340 * DPR;
+        var len = baseLen;
+        var segs = 9;
 
-        var segs = 8;
-        ctx.strokeStyle = 'rgba(6,12,10,0.8)';
+        ctx.strokeStyle = 'rgba(6,12,10,0.78)';
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.beginPath();
@@ -198,29 +226,29 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.moveTo(prevX, prevY);
         for(var s=1; s<=segs; s++){
           var progress = s / segs;
-          var taper = 1 - progress*0.4;
-          ctx.lineWidth = (6.8 * taper) * DPR;
-          var wave = Math.sin(nowBase * (0.9 + 0.4*speedBoost) + s*1.8) * (38 + 26*s) * DPR;
-          var wave2 = Math.cos(nowBase * (0.8 + 0.5*speedBoost) + s*1.3) * (20 + 12*s) * DPR;
-          var angle = aimAngle + wave * 0.0034;
-          var px = originX + Math.cos(angle) * len * progress + wave2 * 0.42;
-          var py = originY + Math.sin(angle) * len * progress + wave * 0.18;
+          var taper = 1 - progress*0.38;
+          ctx.lineWidth = (6.1 * taper) * DPR;
+          var wave = Math.sin(nowBase * (0.9 + 0.3*s) + s*1.7) * (28 + 20*s) * DPR;
+          var wave2 = Math.cos(nowBase * (0.8 + 0.25*s) + s*1.3) * (17 + 10*s) * DPR;
+          var angle = aimAngle + wave * 0.003;
+          var px = originX + Math.cos(angle) * len * progress + wave2 * 0.34;
+          var py = originY + Math.sin(angle) * len * progress + wave * 0.15;
           ctx.lineTo(px, py);
           prevX = px; prevY = py;
         }
         ctx.stroke();
         // Jasny rdzeń macki
-        ctx.strokeStyle = 'rgba(0,208,132,0.42)';
-        ctx.lineWidth = 2.8 * DPR;
+        ctx.strokeStyle = 'rgba(0,208,132,0.45)';
+        ctx.lineWidth = 2.5 * DPR;
         ctx.beginPath();
         ctx.moveTo(originX, originY);
         for(var s2=1; s2<=segs; s2++){
           var progress2 = s2 / segs;
-          var waveA = Math.sin(nowBase * (1.1 + 0.5*speedBoost) + s2*1.5) * (18 + 11*s2) * DPR;
-          var waveB = Math.cos(nowBase * (1.5 + 0.6*speedBoost) + s2*1.7) * (15 + 9*s2) * DPR;
-          var angleA = aimAngle + waveA * 0.0028;
-          var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.2;
-          var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.14;
+          var waveA = Math.sin(nowBase * (0.95) + s2*1.32) * (15 + 10*s2) * DPR;
+          var waveB = Math.cos(nowBase * (1.18) + s2*1.5) * (12 + 8*s2) * DPR;
+          var angleA = aimAngle + waveA * 0.0025;
+          var px2 = originX + Math.cos(angleA) * len * progress2 + waveB * 0.17;
+          var py2 = originY + Math.sin(angleA) * len * progress2 + waveA * 0.11;
           ctx.lineTo(px2, py2);
         }
         ctx.stroke();
