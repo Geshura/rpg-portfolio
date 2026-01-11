@@ -17,8 +17,8 @@ body{
   margin:0;
   color:#dff4ff;
   font-family: 'Inter', system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(55,182,255,0.06), transparent),
-              radial-gradient(900px 500px at 90% 80%, rgba(0,255,209,0.04), transparent),
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(55,182,255,0.05), transparent),
+              radial-gradient(900px 500px at 90% 80%, rgba(0,255,209,0.03), transparent),
               linear-gradient(180deg,var(--bg-0) 0%, var(--bg-1) 100%);
   min-height:100vh;
   overflow-x:hidden;
@@ -36,14 +36,14 @@ body::before{
 .wrap{max-width:1100px;margin:0 auto;padding:2rem;position:relative;z-index:2}
 .lang{position:relative}
 #bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
-.hero{padding:3.5rem 0;background:linear-gradient(180deg, rgba(0,0,0,0.2), transparent)}
+.hero{padding:3.5rem 0 2.2rem;background:linear-gradient(180deg, rgba(0,0,0,0.22), transparent);border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter: blur(2px)}
 .lang-switch{display:flex;gap:.5rem;justify-content:flex-end;margin-bottom:.6rem}
 .lang-switch a{color:var(--muted);background:transparent;padding:.25rem .6rem;border-radius:6px;text-decoration:none;border:1px solid rgba(255,255,255,0.04)}
 .lang-switch a.active{color:var(--bg-0);background:var(--neon);box-shadow:var(--accent-glow);border-color:transparent}
 .lang-switch + #fx-toggle{margin-left:1rem}
 #fx-toggle{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);padding:.35rem .6rem;border-radius:6px;cursor:pointer}
 #fx-toggle[aria-pressed="true"]{background:rgba(255,255,255,0.02);color:var(--neon);box-shadow:0 0 8px rgba(55,182,255,0.08)}
-.headline{font-size:2.0rem;margin:0 0 .5rem;color:var(--neon);text-shadow:0 0 12px rgba(55,182,255,0.12),0 4px 14px rgba(0,0,0,0.6)}
+.headline{font-size:2.0rem;margin:0 0 .5rem;color:var(--neon);text-shadow:0 0 14px rgba(0,0,0,0.25),0 6px 28px rgba(0,0,0,0.5);letter-spacing:0.4px}
 .sub{color:var(--muted);margin:0 0 1rem;font-family:system-ui,Segoe UI,Roboto}
 .lang{display:none}
 body[data-lang="en"] .lang-en{display:block}
@@ -54,6 +54,8 @@ body[data-lang="pl"] .lang-pl{display:block}
 .top-nav a:hover{color:var(--neon);text-shadow:0 0 8px rgba(55,182,255,0.12)}
 .content{max-width:1100px;margin:2rem auto;padding:0 1rem 4rem;position:relative;z-index:2}
 .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));backdrop-filter: blur(4px);border:1px solid rgba(255,54,182,0.04);border-radius:10px;padding:1.2rem;margin-bottom:1rem;box-shadow:0 10px 28px rgba(0,0,0,0.55)}
+/* stronger card contrast for readability */
+.card{border-radius:12px;padding:1.4rem;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.035)}
 h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
 .gear{list-style:none;padding:0;margin:0 0 1rem}
 .gear li{padding:.5rem 0;border-bottom:1px dashed rgba(55,182,255,0.04);color:var(--muted)}
@@ -112,9 +114,12 @@ h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
 .pdf-controls select,.pdf-controls input{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:.35rem .6rem;border-radius:6px}
 .pdf-controls .action-btn{padding:.35rem .6rem}
 .pdf-list table{width:100%;border-collapse:collapse;color:var(--muted)}
-.pdf-list th{text-align:left;padding:.6rem;background:rgba(255,255,255,0.02);color:var(--neon);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.04)}
+.pdf-list th{text-align:left;padding:.6rem;background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));color:var(--neon);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.04);position:sticky;top:0}
 .pdf-list td{padding:.6rem;border-bottom:1px dashed rgba(255,255,255,0.03);vertical-align:middle}
-.pdf-list img.thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;margin-right:.5rem;vertical-align:middle}
+.pdf-list tr{transition:background .18s ease, transform .08s ease}
+.pdf-list tr:hover{background:rgba(255,255,255,0.01);transform:translateY(-2px)}
+.pdf-list img.thumb{width:56px;height:56px;object-fit:cover;border-radius:8px;margin-right:.6rem;vertical-align:middle;transition:transform .12s ease, box-shadow .12s ease}
+.pdf-list img.thumb:hover{transform:scale(1.06);box-shadow:0 6px 18px rgba(0,0,0,0.5)}
 .pdf-meta{display:flex;align-items:center;gap:.5rem}
 .pdf-empty{color:var(--muted);padding:.8rem}
 .pdf-list .date{color:var(--muted);font-size:0.95rem}
@@ -123,6 +128,10 @@ h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
   .pdf-controls{flex-direction:column;align-items:stretch}
   .pdf-controls label{width:100%}
 }
+
+/* small improvements for footer and notes */
+.foot{opacity:0.9}
+.note{line-height:1.45}
 
 /* Actions for list items (Mam / Szukam / Wymienię) */
 .item-actions{margin-top:0.6rem;display:flex;gap:0.4rem;flex-wrap:wrap}
