@@ -157,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function(){
       
       if(theme === 'mystery'){
         // Gwiazda Cthulhu z jednym olbrzymim okiem
-        ctx.globalCompositeOperation = 'lighter';
         var nowMs = performance.now();
         var tBase = nowMs * 0.00105;
         orbPhase += 0.0014 * (Date.now() - (window.__lastOrbTime||Date.now()));
@@ -179,9 +178,10 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
         // Zewnętrzne światło gwiazdy
+        ctx.globalCompositeOperation = 'screen';
         var starGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, starRadius*1.5);
-        starGlow.addColorStop(0, 'rgba(157,78,221,0.25)');
-        starGlow.addColorStop(0.5, 'rgba(0,208,132,0.15)');
+        starGlow.addColorStop(0, 'rgba(157,78,221,0.35)');
+        starGlow.addColorStop(0.5, 'rgba(0,208,132,0.25)');
         starGlow.addColorStop(1, 'rgba(0,255,209,0)');
         ctx.fillStyle = starGlow;
         ctx.beginPath();
@@ -392,6 +392,7 @@ document.addEventListener('DOMContentLoaded', function(){
           }
         }
 
+        ctx.globalCompositeOperation = 'source-over';
       }
       
       // Przyciąganie cząstek do kursora ze spiralnym ruchem
