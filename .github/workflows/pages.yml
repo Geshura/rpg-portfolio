@@ -8,9 +8,16 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
@@ -20,3 +27,6 @@ jobs:
           publish_branch: gh-pages
           # keep empty commit disabled to avoid noise
           force_orphan: false
+          # set a recognizable committer for the action
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
