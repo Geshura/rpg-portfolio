@@ -115,6 +115,11 @@ h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
 .pdf-controls .action-btn{padding:.35rem .6rem}
 .pdf-list table{width:100%;border-collapse:collapse;color:var(--muted)}
 .pdf-list th{text-align:left;padding:.6rem;background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));color:var(--neon);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.04);position:sticky;top:0}
+.pdf-list th.sortable{cursor:pointer;position:relative}
+.pdf-list th.sortable:after{content:'';display:inline-block;margin-left:.6rem;width:.7rem;height:.7rem;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:8px solid currentColor;opacity:0.18;transform-origin:center;transition:transform .22s cubic-bezier(.2,.9,.2,1),opacity .18s}
+.pdf-list th.sorted-asc:after{transform:rotate(0) translateY(-1px);opacity:0.95}
+.pdf-list th.sorted-desc:after{transform:rotate(180deg) translateY(1px);opacity:0.95}
+.pdf-list th.sortable:hover:after{opacity:0.55}
 .pdf-list td{padding:.6rem;border-bottom:1px dashed rgba(255,255,255,0.03);vertical-align:middle}
 .pdf-list tr{transition:background .18s ease, transform .08s ease}
 .pdf-list tr:hover{background:rgba(255,255,255,0.01);transform:translateY(-2px)}
