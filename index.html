@@ -68,6 +68,30 @@
 					</label>
 
 					<button id="pdf-refresh" class="action-btn">Odśwież listę</button>
+
+					<div id="pdf-filters" class="pdf-filters">
+						<div class="filter-row">
+							<div class="filter-group">
+								<strong>Języki:</strong>
+								<div id="filter-languages" class="filter-list"></div>
+							</div>
+							<div class="filter-group">
+								<strong>Wydawnictwa:</strong>
+								<div id="filter-publishers" class="filter-list"></div>
+							</div>
+							<div class="filter-group">
+								<strong>Systemy:</strong>
+								<div id="filter-systems" class="filter-list"></div>
+							</div>
+						</div>
+
+						<div class="filter-row">
+							<div class="filter-group">
+								<strong>Posiadanie:</strong>
+								<button id="pdf-possession-toggle" class="action-btn" data-possession="all" aria-pressed="false">Filtr: Wszystkie</button>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div id="pdf-list-container" class="pdf-list" aria-live="polite">
