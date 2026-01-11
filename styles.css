@@ -123,6 +123,9 @@ h2{margin-top:0;color:#e8fdf0;letter-spacing:0.6px}
 .pdf-list td{padding:.6rem;border-bottom:1px dashed rgba(255,255,255,0.03);vertical-align:middle}
 .pdf-list tr{transition:background .18s ease, transform .08s ease}
 .pdf-list tr:hover{background:rgba(255,255,255,0.01);transform:translateY(-2px)}
+.pdf-list tbody tr:nth-child(odd){background:rgba(255,255,255,0.008)}
+.pdf-list tbody tr:nth-child(even){background:rgba(255,255,255,0.016)}
+.pdf-list tbody tr:hover{background:rgba(255,255,255,0.02)}
 .pdf-list img.thumb{width:56px;height:56px;object-fit:cover;border-radius:8px;margin-right:.6rem;vertical-align:middle;transition:transform .12s ease, box-shadow .12s ease}
 .pdf-list img.thumb:hover{transform:scale(1.06);box-shadow:0 6px 18px rgba(0,0,0,0.5)}
 .pdf-meta{display:flex;align-items:center;gap:.5rem}
