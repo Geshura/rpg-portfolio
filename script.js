@@ -52,13 +52,13 @@ document.addEventListener('DOMContentLoaded', function(){
         // Post-Apo: Ogromne fale/sonar wypychające cząstki od kursora
         ctx.globalCompositeOperation = 'lighter';
         
-        // Pulsujące, daleko sięgające pierścienie (sonar)
-        var t = (Date.now() % 4500) / 4500; // 0..1
+        // Pulsujące, drobniejsze kręgi lecące bardzo daleko (sonar)
+        var t = (Date.now() % 5200) / 5200; // 0..1
         for(var i=0; i<4; i++){
-          var radius = (220 + i*180 + t*900) * DPR;
-          var alpha = Math.max(0, 0.22 - i*0.04 - t*0.14);
+          var radius = (40 + i*60 + t*1400) * DPR;
+          var alpha = Math.max(0, 0.26 - i*0.05 - t*0.18);
           ctx.strokeStyle = 'rgba(255,153,68,'+(alpha)+')';
-          ctx.lineWidth = (4 - i) * 1.2 * DPR;
+          ctx.lineWidth = Math.max(1.4, (3.6 - i*0.6)) * DPR;
           ctx.beginPath();
           ctx.arc(mouseX, mouseY, radius, 0, Math.PI*2);
           ctx.stroke();
@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function(){
           var dx = p.x - mouseX;
           var dy = p.y - mouseY;
           var dist = Math.sqrt(dx*dx + dy*dy);
-          if(dist < 420*DPR && dist > 0){
-            var force = (420*DPR - dist) / (420*DPR);
-            p.vx += (dx/dist) * force * 0.55;
-            p.vy += (dy/dist) * force * 0.55;
+          if(dist < 460*DPR && dist > 0){
+            var force = (460*DPR - dist) / (460*DPR);
+            p.vx += (dx/dist) * force * 0.52;
+            p.vy += (dy/dist) * force * 0.52;
           }
         });
       }
@@ -131,34 +131,38 @@ document.addEventListener('DOMContentLoaded', function(){
           var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
           var len = (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
           var segs = 7;
-          ctx.strokeStyle = 'rgba(10,30,25,0.65)';
-          ctx.lineWidth = 2.6 * DPR;
+          ctx.strokeStyle = 'rgba(6,12,10,0.8)';
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
           ctx.beginPath();
           var prevX = mouseX;
           var prevY = mouseY;
           ctx.moveTo(prevX, prevY);
           for(var s=1; s<=segs; s++){
             var progress = s / segs;
-            var wave = Math.sin(now * 3.2 + s*1.8 + tentacleSeeds[ti % tentacleSeeds.length]) * (30 + 24*s) * DPR;
-            var wave2 = Math.cos(now * 1.4 + s*0.9 + ti*0.6) * (14 + 10*s) * DPR;
-            var angle = baseAngle + wave * 0.0038;
-            var px = mouseX + Math.cos(angle) * len * progress + wave2 * 0.35;
-            var py = mouseY + Math.sin(angle) * len * progress + wave * 0.15;
+            var taper = 1 - progress*0.35;
+            ctx.lineWidth = (6.5 * taper) * DPR;
+            var wave = Math.sin(now * 3.4 + s*2.1 + tentacleSeeds[ti % tentacleSeeds.length]) * (44 + 28*s) * DPR;
+            var wave2 = Math.cos(now * 1.6 + s*1.1 + ti*0.7) * (22 + 12*s) * DPR;
+            var angle = baseAngle + wave * 0.0043;
+            var px = mouseX + Math.cos(angle) * len * progress + wave2 * 0.55;
+            var py = mouseY + Math.sin(angle) * len * progress + wave * 0.22;
             ctx.lineTo(px, py);
             prevX = px; prevY = py;
           }
           ctx.stroke();
-          // Jasny rdzeń macki
-          ctx.strokeStyle = 'rgba(0,208,132,0.35)';
-          ctx.lineWidth = 1.2 * DPR;
+          // Jasny rdzeń macki (grubszy, ale węższy niż obrys)
+          ctx.strokeStyle = 'rgba(0,208,132,0.42)';
+          ctx.lineWidth = 2.4 * DPR;
           ctx.beginPath();
           ctx.moveTo(mouseX, mouseY);
           for(var s2=1; s2<=segs; s2++){
             var progress2 = s2 / segs;
-            var waveA = Math.sin(now * 2.6 + s2*1.4 + ti) * (18 + 10*s2) * DPR;
-            var angleA = baseAngle + waveA * 0.003;
-            var px2 = mouseX + Math.cos(angleA) * len * progress2;
-            var py2 = mouseY + Math.sin(angleA) * len * progress2;
+            var waveA = Math.sin(now * 2.6 + s2*1.4 + ti) * (22 + 12*s2) * DPR;
+            var waveB = Math.cos(now * 3.1 + s2*1.8 + ti*0.6) * (18 + 10*s2) * DPR;
+            var angleA = baseAngle + waveA * 0.0035;
+            var px2 = mouseX + Math.cos(angleA) * len * progress2 + waveB * 0.25;
+            var py2 = mouseY + Math.sin(angleA) * len * progress2 + waveA * 0.18;
             ctx.lineTo(px2, py2);
           }
           ctx.stroke();
