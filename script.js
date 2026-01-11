@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function(){
         applyFiltersAndSort();
       });
 
-      // Build possession filter as radio buttons
+      // Build possession filter as checkboxes
       if(filterPossessionEl){
         var possessionOptions = [
           {value: 'all', label: 'Wszystkie'},
@@ -493,12 +493,40 @@ document.addEventListener('DOMContentLoaded', function(){
         var possessionHtml = possessionOptions.map(function(opt, i){
           var id = 'poss-'+i;
           var checked = opt.value === 'all' ? ' checked' : '';
-          return '<label class="chk"><input type="radio" id="'+id+'" name="possession-filter" value="'+opt.value+'"'+checked+'> '+opt.label+'</label>';
+          return '<label class="chk"><input type="checkbox" id="'+id+'" data-value="'+opt.value+'"'+checked+'> '+opt.label+'</label>';
         }).join('');
         filterPossessionEl.innerHTML = possessionHtml;
-        filterPossessionEl.querySelectorAll('input[type="radio"]').forEach(function(radio){
-          radio.addEventListener('change', function(){
-            if(this.checked){ possessionFilter = this.value; applyFiltersAndSort(); }
+        filterPossessionEl.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox){
+          checkbox.addEventListener('change', function(){
+            var allCheckbox = document.getElementById('poss-0');
+            var haveCheckbox = document.getElementById('poss-1');
+            var wantCheckbox = document.getElementById('poss-2');
+            
+            // If 'all' is checked, uncheck others
+            if(this.id === 'poss-0' && this.checked){
+              haveCheckbox.checked = false;
+              wantCheckbox.checked = false;
+              possessionFilter = 'all';
+            } else if(this.id !== 'poss-0' && this.checked){
+              allCheckbox.checked = false;
+              if(haveCheckbox.checked && wantCheckbox.checked){
+                allCheckbox.checked = true;
+                haveCheckbox.checked = false;
+                wantCheckbox.checked = false;
+                possessionFilter = 'all';
+              } else if(haveCheckbox.checked){
+                possessionFilter = 'have';
+              } else if(wantCheckbox.checked){
+                possessionFilter = 'want';
+              }
+            } else {
+              // If all unchecked, default to 'all'
+              if(!allCheckbox.checked && !haveCheckbox.checked && !wantCheckbox.checked){
+                allCheckbox.checked = true;
+                possessionFilter = 'all';
+              }
+            }
+            applyFiltersAndSort();
           });
         });
       }
