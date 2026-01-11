@@ -20,4 +20,3 @@ jobs:
           publish_branch: gh-pages
           # keep empty commit disabled to avoid noise
           force_orphan: false
-        with:
