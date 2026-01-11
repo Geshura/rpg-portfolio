@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', function(){
     var mouseX = 0, mouseY = 0;
     var lastMouseMove = 0;
     var clickRipples = [];
+    var beamShots = [];
+    var pentagramPhase = 0;
     var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
     var tentacleAnchors = Array.from({length: 12}, function(){ return { offset: Math.random()*Math.PI*2, phase: Math.random()*10 }; });
     var lastClickTarget = { x: 0, y: 0, until: 0 };
-    var orbPhase = 0;
-    var beamShots = [];
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -43,15 +43,6 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }
 
-    function infinityPath(t){
-      var a = Math.min(w,h) * 0.32;
-      var cx = w*0.5, cy = h*0.5;
-      return {
-        x: cx + a * Math.sin(t),
-        y: cy + a * Math.sin(t) * Math.cos(t)
-      };
-    }
-
     // Mouse tracking
     document.addEventListener('mousemove', function(e){
       mouseX = e.clientX * DPR;
@@ -64,16 +55,16 @@ document.addEventListener('DOMContentLoaded', function(){
     // Click-triggered sonar ripples
     document.addEventListener('click', function(e){
       clickRipples.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
+      beamShots.push({ x: e.clientX * DPR, y: e.clientY * DPR, start: performance.now() });
       if(clickRipples.length > 12) clickRipples.shift();
       lastClickTarget = { x: e.clientX * DPR, y: e.clientY * DPR, until: performance.now() + 1400 };
-      beamShots.push({ x: lastClickTarget.x, y: lastClickTarget.y, start: performance.now() });
-      if(beamShots.length > 6) beamShots.shift();
     });
 
     function drawMouseEffects(){
       var theme = document.body.getAttribute('data-theme');
       
       if(theme === 'post-apo'){
+        ctx.globalCompositeOperation = 'source-over';
         // Post-Apo: Ogromne fale/sonar wypychające cząstki od kursora
         ctx.globalCompositeOperation = 'lighter';
         
@@ -122,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
       }
       
-      if(theme === 'cyberpunk'){
+      else if(theme === 'cyberpunk'){
         // Cyberpunk: Świecące linie grid reagujące na kursor
         ctx.globalCompositeOperation = 'lighter';
         ctx.strokeStyle = 'rgba(0,255,255,0.3)';
@@ -155,230 +146,161 @@ document.addEventListener('DOMContentLoaded', function(){
         }
       }
       
-      if(theme === 'mystery'){
-        // Gwiazda Cthulhu z jednym olbrzymim okiem
+      else if(theme === 'mystery'){
         ctx.globalCompositeOperation = 'source-over';
-        var nowMs = performance.now();
-        var tBase = nowMs * 0.00105;
-        orbPhase += 0.0014 * (Date.now() - (window.__lastOrbTime||Date.now()));
-        window.__lastOrbTime = Date.now();
-
-        var centerX = w*0.5, centerY = h*0.5;
-        var starPoints = 7;  // heptagram
-        var starRadius = 450*DPR;
-        var innerRadius = 200*DPR;
-
-        // Współrzędne gwiazdy
-        var starX = [], starY = [];
-        for(var sp=0; sp<starPoints*2; sp++){
-          var angle = (sp / (starPoints*2)) * Math.PI*2 - Math.PI/2;
-          var radius = (sp % 2 === 0) ? starRadius : innerRadius;
-          var wobble = Math.sin(tBase*0.7 + sp*0.4) * 30*DPR;
-          starX[sp] = centerX + Math.cos(angle) * (radius + wobble);
-          starY[sp] = centerY + Math.sin(angle) * (radius + wobble);
-        }
-
-        // Gwiazda - granice
-        ctx.strokeStyle = 'rgba(0,255,209,0.95)';
-        ctx.lineWidth = 48*DPR;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(starX[0], starY[0]);
-        for(var sp=1; sp<starX.length; sp++){
-          ctx.lineTo(starX[sp], starY[sp]);
-        }
-        ctx.closePath();
-        ctx.stroke();
-
-        // Gwiazda - wewnętrzny blask
-        ctx.strokeStyle = 'rgba(157,78,221,0.7)';
-        ctx.lineWidth = 20*DPR;
-        ctx.beginPath();
-        ctx.moveTo(starX[0], starY[0]);
-        for(var sp=1; sp<starX.length; sp++){
-          ctx.lineTo(starX[sp], starY[sp]);
-        }
-        ctx.closePath();
-        ctx.stroke();
-
-        // Wypełnienie gwiazdy
-        var starFill = ctx.createLinearGradient(centerX-starRadius, centerY-starRadius, centerX+starRadius, centerY+starRadius);
-        starFill.addColorStop(0, 'rgba(157,78,221,0.3)');
-        starFill.addColorStop(0.5, 'rgba(30,20,50,0.5)');
-        starFill.addColorStop(1, 'rgba(0,208,132,0.2)');
-        ctx.fillStyle = starFill;
-        ctx.beginPath();
-        ctx.moveTo(starX[0], starY[0]);
-        for(var sp=1; sp<starX.length; sp++){
-          ctx.lineTo(starX[sp], starY[sp]);
-        }
-        ctx.closePath();
-        ctx.fill();
-
-        // OLBRZYMIE OKO w centrum
+        pentagramPhase += 0.0008;
         
-        // Halo oka
-        var eyeHalo = ctx.createRadialGradient(centerX, centerY, 100*DPR, centerX, centerY, 320*DPR);
-        eyeHalo.addColorStop(0, 'rgba(0,255,209,0.4)');
-        eyeHalo.addColorStop(0.5, 'rgba(157,78,221,0.2)');
-        eyeHalo.addColorStop(1, 'rgba(100,50,150,0)');
-        ctx.fillStyle = eyeHalo;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 320*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Białko oka
-        ctx.fillStyle = 'rgba(230,220,240,0.95)';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 130*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Tęczówka
-        var iris = ctx.createRadialGradient(centerX, centerY, 30*DPR, centerX, centerY, 120*DPR);
-        iris.addColorStop(0, 'rgba(220,100,255,0.9)');
-        iris.addColorStop(0.5, 'rgba(150,50,200,0.8)');
-        iris.addColorStop(1, 'rgba(80,20,120,0.6)');
-        ctx.fillStyle = iris;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 120*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Detale tęczówki
-        ctx.strokeStyle = 'rgba(200,80,230,0.5)';
-        ctx.lineWidth = 3*DPR;
-        for(var iline=0; iline<8; iline++){
-          var lAngle = (iline/8)*Math.PI*2;
-          var lx1 = centerX + Math.cos(lAngle)*50*DPR;
-          var ly1 = centerY + Math.sin(lAngle)*50*DPR;
-          var lx2 = centerX + Math.cos(lAngle)*110*DPR;
-          var ly2 = centerY + Math.sin(lAngle)*110*DPR;
+        // Pentagramy w tle - animowane
+        function drawPentagram(cx, cy, size, color, alpha){
+          var points = [];
+          for(var i=0; i<5; i++){
+            var angle = (i * 72 - 90) * Math.PI / 180;
+            points.push({
+              x: cx + Math.cos(angle) * size,
+              y: cy + Math.sin(angle) * size
+            });
+          }
+          
+          ctx.strokeStyle = color.replace('1)', alpha+')');
+          ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.moveTo(lx1, ly1);
-          ctx.lineTo(lx2, ly2);
+          ctx.moveTo(points[0].x, points[0].y);
+          ctx.lineTo(points[2].x, points[2].y);
+          ctx.lineTo(points[4].x, points[4].y);
+          ctx.lineTo(points[1].x, points[1].y);
+          ctx.lineTo(points[3].x, points[3].y);
+          ctx.lineTo(points[0].x, points[0].y);
           ctx.stroke();
         }
-
-        // Źrenica ruchoma
-        var pupilDx = mouseX - centerX;
-        var pupilDy = mouseY - centerY;
-        var pupilAngle = Math.atan2(pupilDy, pupilDx);
-        var pupilOffset = 35*DPR;
-        var pupilX = centerX + Math.cos(pupilAngle) * pupilOffset;
-        var pupilY = centerY + Math.sin(pupilAngle) * pupilOffset;
-
-        // Czarna źrenica
-        ctx.fillStyle = 'rgba(0,0,0,0.98)';
-        ctx.beginPath();
-        ctx.arc(pupilX, pupilY, 65*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Glębia źrenicy
-        ctx.fillStyle = 'rgba(0,0,0,0.95)';
-        ctx.beginPath();
-        ctx.arc(pupilX, pupilY, 50*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Błyski
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.beginPath();
-        ctx.arc(pupilX - 15*DPR, pupilY - 20*DPR, 18*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        ctx.beginPath();
-        ctx.arc(pupilX + 12*DPR, pupilY + 15*DPR, 10*DPR, 0, Math.PI*2);
-        ctx.fill();
-
-        // Maleńkie oczy na ramionach gwiazdy
-        for(var star=0; star<starPoints; star++){
-          var stAngle = (-Math.PI/2) + (star/starPoints)*Math.PI*2;
-          var stX = centerX + Math.cos(stAngle) * starRadius;
-          var stY = centerY + Math.sin(stAngle) * starRadius;
-          var pulse = Math.sin(tBase*1.5 + star)*0.5 + 0.5;
-          
-          ctx.fillStyle = 'rgba(200,200,100,' + (0.8*pulse) + ')';
+        
+        // Funkcja rysująca małe oko
+        function drawSmallEye(ex, ey, size, alpha){
+          // Tęczówka zielona (bez białka)
+          var irisGrad = ctx.createRadialGradient(ex, ey, size*0.2, ex, ey, size);
+          irisGrad.addColorStop(0, 'rgba(0,180,120,'+alpha+')');
+          irisGrad.addColorStop(1, 'rgba(0,80,50,'+(alpha*0.9)+')');
+          ctx.fillStyle = irisGrad;
           ctx.beginPath();
-          ctx.arc(stX, stY, 12*DPR, 0, Math.PI*2);
+          ctx.arc(ex, ey, size, 0, Math.PI*2);
           ctx.fill();
-
-          var smallPupilDx = mouseX - stX;
-          var smallPupilDy = mouseY - stY;
-          var smallPupilAngle = Math.atan2(smallPupilDy, smallPupilDx);
-          var smallPupilX = stX + Math.cos(smallPupilAngle)*4*DPR;
-          var smallPupilY = stY + Math.sin(smallPupilAngle)*4*DPR;
-
-          ctx.fillStyle = 'rgba(0,0,0,0.95)';
+          
+          // Źrenica śledząca kursor
+          var edx = mouseX - ex;
+          var edy = mouseY - ey;
+          var eang = Math.atan2(edy, edx);
+          var epx = ex + Math.cos(eang) * (size * 0.25);
+          var epy = ey + Math.sin(eang) * (size * 0.25);
+          
+          ctx.fillStyle = 'rgba(0,0,0,'+alpha+')';
           ctx.beginPath();
-          ctx.arc(smallPupilX, smallPupilY, 5*DPR, 0, Math.PI*2);
+          ctx.arc(epx, epy, size*0.45, 0, Math.PI*2);
+          ctx.fill();
+          
+          // Błysk
+          ctx.fillStyle = 'rgba(255,255,255,'+(alpha*0.8)+')';
+          ctx.beginPath();
+          ctx.arc(epx - size*0.15, epy - size*0.2, size*0.2, 0, Math.PI*2);
           ctx.fill();
         }
-
+        
+        // Wiele pentagramów poruszających się
+        var pentagramsData = [
+          {x: 0.15, y: 0.2, size: 120, color: 'rgba(157,77,221,1)', speed: 0.0003},
+          {x: 0.85, y: 0.25, size: 100, color: 'rgba(0,208,132,1)', speed: 0.0004},
+          {x: 0.2, y: 0.75, size: 90, color: 'rgba(0,208,132,1)', speed: 0.0005},
+          {x: 0.8, y: 0.7, size: 110, color: 'rgba(157,77,221,1)', speed: 0.00035},
+          {x: 0.25, y: 0.35, size: 85, color: 'rgba(157,77,221,1)', speed: 0.0006},
+          {x: 0.75, y: 0.45, size: 95, color: 'rgba(0,208,132,1)', speed: 0.00045},
+          {x: 0.1, y: 0.5, size: 80, color: 'rgba(0,208,132,1)', speed: 0.00055},
+          {x: 0.9, y: 0.6, size: 105, color: 'rgba(157,77,221,1)', speed: 0.0004},
+          {x: 0.4, y: 0.1, size: 75, color: 'rgba(157,77,221,1)', speed: 0.00065},
+          {x: 0.6, y: 0.9, size: 90, color: 'rgba(0,208,132,1)', speed: 0.0005}
+        ];
+        
+        pentagramsData.forEach(function(pent, idx){
+          var px = w * pent.x + Math.sin(pentagramPhase * 30 + idx * 2.5) * 80;
+          var py = h * pent.y + Math.cos(pentagramPhase * 35 + idx * 1.8) * 60;
+          var alphaVal = 0.25 + Math.sin(pentagramPhase * 2.5 + idx) * 0.1;
+          drawPentagram(px, py, pent.size, pent.color, alphaVal);
+        });
+        
+        // Latające małe oczy
+        var eyesData = [
+          {x: 0.12, y: 0.15, size: 25},
+          {x: 0.88, y: 0.18, size: 28},
+          {x: 0.25, y: 0.08, size: 22},
+          {x: 0.75, y: 0.12, size: 26},
+          {x: 0.08, y: 0.45, size: 24},
+          {x: 0.92, y: 0.52, size: 27},
+          {x: 0.15, y: 0.85, size: 23},
+          {x: 0.82, y: 0.88, size: 25},
+          {x: 0.35, y: 0.92, size: 26},
+          {x: 0.65, y: 0.07, size: 24},
+          {x: 0.05, y: 0.68, size: 22},
+          {x: 0.95, y: 0.35, size: 28}
+        ];
+        
+        eyesData.forEach(function(eye, idx){
+          var ex = w * eye.x + Math.sin(pentagramPhase * 25 + idx * 3) * 70;
+          var ey = h * eye.y + Math.cos(pentagramPhase * 28 + idx * 2.2) * 55;
+          var alphaVal = 0.7 + Math.sin(pentagramPhase * 2 + idx * 0.8) * 0.2;
+          drawSmallEye(ex, ey, eye.size, alphaVal);
+        });
+        
+        var cx = w * 0.5, cy = h * 0.5;
+        
+        // Duża gwiazda orbitująca wokół oka
+        var orbitAngle = pentagramPhase * 1.2;
+        var orbitRadius = 280;
+        var starOrbitX = cx + Math.cos(orbitAngle) * orbitRadius;
+        var starOrbitY = cy + Math.sin(orbitAngle) * orbitRadius;
+        var starAlpha = 0.5 + Math.sin(pentagramPhase * 3) * 0.15;
+        drawPentagram(starOrbitX, starOrbitY, 180, 'rgba(0,208,132,1)', starAlpha);
+        
+        
+        // Tęczówka ciemnozielona (bez białka)
+        var iris = ctx.createRadialGradient(cx, cy, 30, cx, cy, 130);
+        iris.addColorStop(0, 'rgba(0,180,120,0.9)');
+        iris.addColorStop(1, 'rgba(0,80,50,0.8)');
+        ctx.fillStyle = iris;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 130, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Źrenica śledząca mysz
+        var pdx = mouseX - cx;
+        var pdy = mouseY - cy;
+        var pang = Math.atan2(pdy, pdx);
+        var px = cx + Math.cos(pang) * 35;
+        var py = cy + Math.sin(pang) * 35;
+        
+        ctx.fillStyle = 'rgba(0,0,0,0.98)';
+        ctx.beginPath();
+        ctx.arc(px, py, 65, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Błysk
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.beginPath();
+        ctx.arc(px - 15, py - 20, 18, 0, Math.PI*2);
+        ctx.fill();
+        
         // Promienie z kliknięcia
         for(var b=beamShots.length-1; b>=0; b--){
           var shot = beamShots[b];
-          var age = nowMs - shot.start;
-          var dur = 1200;
-          if(age > dur){ beamShots.splice(b,1); continue; }
-          var prog = age/dur;
-          var alphaB = Math.max(0, 0.8 * (1-prog));
+          var age = performance.now() - shot.start;
+          if(age > 1200){ beamShots.splice(b,1); continue; }
+          var prog = age/1200;
+          var alpha = Math.max(0, 0.8 * (1-prog));
           
-          var gradB = ctx.createLinearGradient(centerX, centerY, shot.x, shot.y);
-          gradB.addColorStop(0, 'rgba(200,100,255,'+alphaB+')');
-          gradB.addColorStop(0.5, 'rgba(0,255,209,'+alphaB+')');
-          gradB.addColorStop(1, 'rgba(157,78,221,'+(alphaB*0.6)+')');
-          ctx.strokeStyle = gradB;
-          ctx.lineWidth = 12 * DPR;
-          ctx.lineCap = 'round';
+          ctx.strokeStyle = 'rgba(0,255,209,'+alpha+')';
+          ctx.lineWidth = 12;
           ctx.beginPath();
-          ctx.moveTo(centerX, centerY);
+          ctx.moveTo(cx, cy);
           ctx.lineTo(shot.x, shot.y);
           ctx.stroke();
-
-          ctx.strokeStyle = 'rgba(0,255,209,'+(alphaB*0.5)+')';
-          ctx.lineWidth = 25*DPR;
-          ctx.beginPath();
-          ctx.moveTo(centerX, centerY);
-          ctx.lineTo(shot.x, shot.y);
-          ctx.stroke();
-
-          var burstR = 80*DPR + prog*180*DPR;
-          var burst = ctx.createRadialGradient(shot.x, shot.y, 0, shot.x, shot.y, burstR);
-          burst.addColorStop(0, 'rgba(200,100,255,'+(alphaB*0.9)+')');
-          burst.addColorStop(0.4, 'rgba(0,255,209,'+(alphaB*0.6)+')');
-          burst.addColorStop(1, 'rgba(157,78,221,0)');
-          ctx.fillStyle = burst;
-          ctx.beginPath();
-          ctx.arc(shot.x, shot.y, burstR, 0, Math.PI*2);
-          ctx.fill();
-
-          for(var w=0; w<4; w++){
-            var waveR = 100*DPR + (prog+w*0.1)*120*DPR;
-            var waveAlpha = Math.max(0, alphaB * (1-((prog+w*0.1)*1.2)));
-            ctx.strokeStyle = 'rgba(0,255,209,'+waveAlpha+')';
-            ctx.lineWidth = 3*DPR;
-            ctx.beginPath();
-            ctx.arc(shot.x, shot.y, waveR, 0, Math.PI*2);
-            ctx.stroke();
-          }
         }
-
-        ctx.globalCompositeOperation = 'source-over';
       }
-      
-      // Przyciąganie cząstek do kursora ze spiralnym ruchem
-      particles.forEach(function(p){
-        var dx = mouseX - p.x;
-        var dy = mouseY - p.y;
-        var dist = Math.sqrt(dx*dx + dy*dy);
-        if(dist < 200*DPR && dist > 20*DPR){
-          var force = (200*DPR - dist) / (200*DPR) * 0.15;
-          var angle2 = Math.atan2(dy, dx);
-          var perpAngle = angle2 + Math.PI/2;
-          p.vx += Math.cos(angle2) * force + Math.cos(perpAngle) * force * 0.5;
-          p.vy += Math.sin(angle2) * force + Math.sin(perpAngle) * force * 0.5;
-        }
-      });
       
       ctx.globalCompositeOperation = 'source-over';
     }
@@ -591,8 +513,6 @@ document.addEventListener('DOMContentLoaded', function(){
         var s = li.getAttribute('data-status') || '';
         li.style.display = (s===f) ? '' : 'none';
       });
-      
-      ctx.globalCompositeOperation = 'source-over';
     });
   });
 
