@@ -505,7 +505,8 @@ h2::after{
 .pdf-list th{
   text-align:left;
   padding:1.2rem 1.5rem;
-  background:linear-gradient(90deg, var(--neon), var(--neon-2));\n  color:var(--bg-0);
+  background:linear-gradient(90deg, var(--neon), var(--neon-2));
+  color:var(--bg-0);
   font-weight:900;
   font-size:0.85rem;
   text-transform:uppercase;
@@ -525,8 +526,8 @@ h2::after{
 }
 
 .pdf-list th.sortable:hover{
-  background:linear-gradient(135deg, rgba(55,182,255,0.12), rgba(0,255,209,0.08));
-  color:var(--neon-2);
+  background:linear-gradient(90deg, var(--neon-2), var(--neon));
+  transform:scale(1.02);
 }
 
 .pdf-list th.sortable:after{
