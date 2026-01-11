@@ -610,13 +610,13 @@ h2::after{
 /* Enhanced left sidebar filters + main content */
 .pdf-grid{
   display:grid;
-  grid-template-columns:240px 1fr;
+  grid-template-columns:180px 1fr;
   gap:2.5rem;
   align-items:start;
 }
 
 .pdf-sidebar{
-  min-width:200px;
+  min-width:160px;
 }
 
 .pdf-sidebar .pdf-filters{
