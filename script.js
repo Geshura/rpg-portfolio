@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
     window.particlesEnabled = true;
     var mouseTrail = [];
     var mouseX = 0, mouseY = 0;
+    var tentacleSeeds = Array.from({length: 12}, function(_, i){ return Math.random()*Math.PI*2 + i*0.3; });
 
     function resize(){
       w = canvas.width = Math.max(300, window.innerWidth * DPR);
@@ -48,17 +49,18 @@ document.addEventListener('DOMContentLoaded', function(){
       var theme = document.body.getAttribute('data-theme');
       
       if(theme === 'post-apo'){
-        // Post-Apo: Fale wypychające cząstki od kursora + pomarańczowe pierścienie
+        // Post-Apo: Ogromne fale/sonar wypychające cząstki od kursora
         ctx.globalCompositeOperation = 'lighter';
         
-        // Pulsujące koncentryczne pierścienie
-        for(var i=0; i<3; i++){
-          var radius = 50 + i*40 + (Date.now() % 2000) / 10;
-          var alpha = 0.3 - i*0.1 - ((Date.now() % 2000) / 2000) * 0.2;
+        // Pulsujące, daleko sięgające pierścienie (sonar)
+        var t = (Date.now() % 4500) / 4500; // 0..1
+        for(var i=0; i<4; i++){
+          var radius = (220 + i*180 + t*900) * DPR;
+          var alpha = Math.max(0, 0.22 - i*0.04 - t*0.14);
           ctx.strokeStyle = 'rgba(255,153,68,'+(alpha)+')';
-          ctx.lineWidth = 3 * DPR;
+          ctx.lineWidth = (4 - i) * 1.2 * DPR;
           ctx.beginPath();
-          ctx.arc(mouseX, mouseY, radius * DPR, 0, Math.PI*2);
+          ctx.arc(mouseX, mouseY, radius, 0, Math.PI*2);
           ctx.stroke();
         }
         
@@ -67,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function(){
           var dx = p.x - mouseX;
           var dy = p.y - mouseY;
           var dist = Math.sqrt(dx*dx + dy*dy);
-          if(dist < 150*DPR && dist > 0){
-            var force = (150*DPR - dist) / (150*DPR);
-            p.vx += (dx/dist) * force * 0.3;
-            p.vy += (dy/dist) * force * 0.3;
+          if(dist < 420*DPR && dist > 0){
+            var force = (420*DPR - dist) / (420*DPR);
+            p.vx += (dx/dist) * force * 0.55;
+            p.vy += (dy/dist) * force * 0.55;
           }
         });
       }
@@ -109,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       
       if(theme === 'mystery'){
-        // Mystery: Spiralne cząstki przyciągane do kursora
+        // Mystery: Spiralne cząstki przyciągane do kursora + mroczne macki
         ctx.globalCompositeOperation = 'lighter';
         
         // Świecący okrąg wokół kursora
@@ -122,27 +124,42 @@ document.addEventListener('DOMContentLoaded', function(){
         ctx.arc(mouseX, mouseY, 100*DPR, 0, Math.PI*2);
         ctx.fill();
 
-        // Macki w stylu Cthulhu
-        var tentacles = 6;
-        var now = Date.now() * 0.002;
+        // Macki w stylu Cthulhu (długie, poskręcane, mroczne)
+        var tentacles = 10;
+        var now = Date.now() * 0.0016;
         for(var ti=0; ti<tentacles; ti++){
-          var baseAngle = (ti / tentacles) * Math.PI * 2;
-          var len = 120 * DPR + 20 * Math.sin(now + ti*1.3) * DPR;
-          var segs = 5;
-          ctx.strokeStyle = 'rgba(0,208,132,0.35)';
-          ctx.lineWidth = 2 * DPR;
+          var baseAngle = (ti / tentacles) * Math.PI * 2 + tentacleSeeds[ti % tentacleSeeds.length];
+          var len = (320 + 180 * Math.sin(now*0.7 + ti*0.8)) * DPR;
+          var segs = 7;
+          ctx.strokeStyle = 'rgba(10,30,25,0.65)';
+          ctx.lineWidth = 2.6 * DPR;
           ctx.beginPath();
           var prevX = mouseX;
           var prevY = mouseY;
           ctx.moveTo(prevX, prevY);
           for(var s=1; s<=segs; s++){
             var progress = s / segs;
-            var wave = Math.sin(now * 1.4 + s*0.9 + ti) * (10 + 6*s) * DPR;
-            var angle = baseAngle + wave * 0.0025;
-            var px = mouseX + Math.cos(angle) * len * progress;
-            var py = mouseY + Math.sin(angle) * len * progress;
+            var wave = Math.sin(now * 3.2 + s*1.8 + tentacleSeeds[ti % tentacleSeeds.length]) * (30 + 24*s) * DPR;
+            var wave2 = Math.cos(now * 1.4 + s*0.9 + ti*0.6) * (14 + 10*s) * DPR;
+            var angle = baseAngle + wave * 0.0038;
+            var px = mouseX + Math.cos(angle) * len * progress + wave2 * 0.35;
+            var py = mouseY + Math.sin(angle) * len * progress + wave * 0.15;
             ctx.lineTo(px, py);
             prevX = px; prevY = py;
+          }
+          ctx.stroke();
+          // Jasny rdzeń macki
+          ctx.strokeStyle = 'rgba(0,208,132,0.35)';
+          ctx.lineWidth = 1.2 * DPR;
+          ctx.beginPath();
+          ctx.moveTo(mouseX, mouseY);
+          for(var s2=1; s2<=segs; s2++){
+            var progress2 = s2 / segs;
+            var waveA = Math.sin(now * 2.6 + s2*1.4 + ti) * (18 + 10*s2) * DPR;
+            var angleA = baseAngle + waveA * 0.003;
+            var px2 = mouseX + Math.cos(angleA) * len * progress2;
+            var py2 = mouseY + Math.sin(angleA) * len * progress2;
+            ctx.lineTo(px2, py2);
           }
           ctx.stroke();
         }
